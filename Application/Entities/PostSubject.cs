@@ -1,0 +1,23 @@
+namespace Application.Entities;
+/// <summary>
+///     Navigation relationship n to n between post and subject   
+/// </summary>
+public class PostSubject
+{
+    /// <summary>
+    ///  Key with post id it is foreign key to post
+    /// </summary>
+    public Guid PostId { get; set; }
+    /// <summary>
+    /// Key with subject id it is foreign key to post  
+    /// </summary>
+    public Guid SubjectId { get; set; }
+    /// <summary>
+    ///  Collection navigation to post object make EF can solve 
+    /// </summary>
+    public ICollection<Post> Posts { get; set; }
+    /// <summary>
+    ///  Collection navigation to subject object make EF can solve  
+    /// </summary>
+    public ICollection<Subject> Subjects { get; set; }
+}
