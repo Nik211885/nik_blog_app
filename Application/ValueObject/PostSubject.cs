@@ -1,4 +1,6 @@
-namespace Application.Entities;
+using Application.Entities;
+
+namespace Application.ValueObject;
 /// <summary>
 ///     Navigation relationship n to n between post and subject   
 /// </summary>

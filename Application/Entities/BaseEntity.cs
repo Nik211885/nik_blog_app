@@ -15,7 +15,7 @@ public abstract class BaseEntity<TKey> where TKey : IEquatable<TKey>
     /// <summary>
     ///     Date time has created object
     /// </summary>
-    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     /// <summary>
     ///     Modified data by user has id and first time modified by will is created by 
     /// </summary>
