@@ -4,7 +4,7 @@ namespace Application.ValueObject;
 /// <summary>
 ///  Defined user follower
 /// </summary>
-public class UserFollowerSubDomain
+public class UserFollower
 {
     /// <summary>
     ///     User id action follower subdomain
@@ -25,7 +25,7 @@ public class UserFollowerSubDomain
     /// <summary>
     ///     Date follow
     /// </summary>
-    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset CreatedAt { get; } = DateTimeOffset.UtcNow;
     /// <summary>
     ///     Flag registered receive notification to subdomain
     /// </summary>

@@ -7,7 +7,7 @@ public class UserSubDomain
     /// <summary>
     ///  Subdomain for blog with each user
     /// </summary>
-    public string? SubDomainBlog { get; set; }
+    public string? SubDomainBlogSlug { get; set; }
     /// <summary>
     ///  Bio for sub domain
     /// </summary>

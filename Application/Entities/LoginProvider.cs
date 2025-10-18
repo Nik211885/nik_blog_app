@@ -2,7 +2,7 @@ namespace Application.Entities;
 /// <summary>
 ///  For information for login provider with sso 
 /// </summary>
-public class LoginProvider : BaseEntity<Guid>
+public class LoginProvider : BaseEntity
 {
     /// <summary>
     ///     Name for provider support sso

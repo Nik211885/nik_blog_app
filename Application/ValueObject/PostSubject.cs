@@ -15,11 +15,11 @@ public class PostSubject
     /// </summary>
     public Guid SubjectId { get; set; }
     /// <summary>
-    ///  Collection navigation to post object make EF can solve 
+    ///  Navigation to post object make EF can solve 
     /// </summary>
-    public ICollection<Post> Posts { get; set; }
+    public Post Posts { get; set; }
     /// <summary>
-    ///  Collection navigation to subject object make EF can solve  
+    ///  Navigation to subject object make EF can solve  
     /// </summary>
-    public ICollection<Subject> Subjects { get; set; }
+    public Subject Subjects { get; set; }
 }

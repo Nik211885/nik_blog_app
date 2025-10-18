@@ -1,10 +1,11 @@
+using Application.Enums;
 using Application.ValueObject;
 
 namespace Application.Entities;
 /// <summary>
 ///     Defined model for user
 /// </summary>
-public class User : BaseEntity<Guid>
+public class User : BaseEntity
 {
     /// <summary>
     ///  Username for user and it unique for each user 
@@ -51,7 +52,19 @@ public class User : BaseEntity<Guid>
     /// </summary>
     public string? Bio { get; set; }
     /// <summary>
+    ///  Slug for user profile
+    /// </summary>
+    public string UserCvSlug { get; set; }
+    /// <summary>
     ///  subdomain defined for each user
     /// </summary>
     public UserSubDomain UserSubDomain { get; set; }
+    /// <summary>
+    ///    Navigation to login provider for ef
+    /// </summary>
+    public ICollection<LoginProvider> LoginProviders { get; set; }
+    /// <summary>
+    ///  Defined role for user
+    /// </summary>
+    public Role Role { get; set; }
 }
