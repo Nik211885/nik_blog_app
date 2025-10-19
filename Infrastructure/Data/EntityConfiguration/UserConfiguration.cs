@@ -81,11 +81,17 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 lockSubDomain.Property(x=>x.ReasonLock)
                     .HasMaxLength(500);
             });
-            userSubDomain.OwnsMany(x => x.Subjects, subject =>
-            {
-                subject.WithOwner()
-                    .HasForeignKey(x => x.CreatedBy);
-            });
         });
+        builder.HasOne(x => x.CreatedByUser)
+            .WithMany()
+            .HasForeignKey(x => x.CreatedBy);
+        // Modified
+        builder.HasOne(x => x.ModifiedByUser)
+            .WithMany()
+            .HasForeignKey(x=>x.ModifiedBy);
+        builder.HasMany(x => x.Subjects)
+            .WithOne(x => x.CreatedByUser)
+            .HasForeignKey(x => x.CreatedBy)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

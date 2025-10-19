@@ -15,7 +15,7 @@ public class LoginProvider : BaseEntity
     /// <summary>
     ///     Navigation to user each user has multiple provider 
     /// </summary>
-    public string UserId { get; set; }
+    public Guid UserId { get; set; }
     /// <summary>
     ///     Navigation for ef
     /// </summary>

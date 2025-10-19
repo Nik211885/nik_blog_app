@@ -1,7 +1,6 @@
 using Application.Enums;
 
 namespace Application.ValueObject;
-
 public class CoutReaction
 {
     /// <summary>

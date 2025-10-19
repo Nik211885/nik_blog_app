@@ -3,6 +3,7 @@ using Application.ValueObject;
 using Infrastructure.Configurations;
 using Infrastructure.Data.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Data;
 /// <summary>
@@ -16,10 +17,10 @@ public class ApplicationDbContext : DbContext
     private readonly PostgresConnectionString  _postgresConnectionString;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> context,
-        PostgresConnectionString postgresConnectionString)
+        IOptions<PostgresConnectionString> postgresConnectionString)
         : base(context)
     {
-        _postgresConnectionString = postgresConnectionString;
+        _postgresConnectionString = postgresConnectionString.Value;
     }
     /// <summary>
     ///     Db set for comment
@@ -50,6 +51,10 @@ public class ApplicationDbContext : DbContext
     /// </summary>
     public DbSet<UserFollower> UserFollowers { get; set; }
     /// <summary>
+    ///     Db set for comment reaction
+    /// </summary>
+    public DbSet<ReactionEntity> ReactionEntities { get; set; }
+    /// <summary>
     ///     Override method in db context will connection postgresql with connection string has config
     /// </summary>
     /// <param name="optionsBuilder"></param>
@@ -74,6 +79,7 @@ public class ApplicationDbContext : DbContext
             .ApplyConfiguration(new PostSubjectConfiguration())
             .ApplyConfiguration(new SubjectConfiguration())
             .ApplyConfiguration(new UserConfiguration())
+            .ApplyConfiguration(new ReactionEntityConfiguration())
             .ApplyConfiguration(new UserFollowerConfiguration());
         base.OnModelCreating(modelBuilder);
     }

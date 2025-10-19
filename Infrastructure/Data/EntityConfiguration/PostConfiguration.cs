@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Application.Entities;
+using Application.Enums;
 using Application.ValueObject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -35,7 +36,7 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
             .OnDelete(DeleteBehavior.Cascade);
         //  reaction post
         builder.HasMany(x=>x.ReactionPosts)
-            .WithOne(x=>x.Entity)
+            .WithOne()
             .HasForeignKey(x=>x.EntityId)
             .OnDelete(DeleteBehavior.Cascade);
         // comment
@@ -43,6 +44,14 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
             .WithOne(x=>x.Post)
             .HasForeignKey(x=>x.PostId)
             .OnDelete(DeleteBehavior.Cascade);
+        // user
+        builder.HasOne(x => x.CreatedByUser)
+            .WithMany()
+            .HasForeignKey(x => x.CreatedBy);
+        // Modified
+        builder.HasOne(x => x.ModifiedByUser)
+            .WithMany()
+            .HasForeignKey(x=>x.ModifiedBy);
         // cout reaction
         builder.Property(x => x.CoutReactions)
             .IsRequired()
@@ -51,6 +60,5 @@ public class PostConfiguration : IEntityTypeConfiguration<Post>
                 v=>JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
                 v=> JsonSerializer.Deserialize<ICollection<CoutReaction>>(v, (JsonSerializerOptions?)null) ?? new List<CoutReaction>()
             );
-
     }
 }

@@ -5,7 +5,7 @@ namespace Application.Entities;
 /// <summary>
 ///  Defined model to content it just is post
 /// </summary>
-public class Post : BaseEntity
+public class Post : AuditEntity
 {
     /// <summary>
     /// Title for post
@@ -34,7 +34,7 @@ public class Post : BaseEntity
     /// <summary>
     /// Collection reaction to post navigation for ef
     /// </summary>
-    public ICollection<PostReaction> ReactionPosts { get; set; }
+    public ICollection<ReactionEntity> ReactionPosts { get; set; }
     /// <summary>
     /// Collection comments to post navigation for ef
     /// </summary>

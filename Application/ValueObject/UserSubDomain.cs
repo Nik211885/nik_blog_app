@@ -17,10 +17,6 @@ public class UserSubDomain
     /// </summary>
     public long CoutFlowers { get; set; }
     /// <summary>
-    ///     Navigation to subject
-    /// </summary>
-    public ICollection<Subject> Subjects { get; set; }
-    /// <summary>
     ///  lock for subdomain
     /// </summary>
     public LockEntity? LockSubDomain { get; set; }

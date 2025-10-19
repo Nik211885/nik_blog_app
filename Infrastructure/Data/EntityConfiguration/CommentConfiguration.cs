@@ -14,17 +14,21 @@ internal class CommentConfiguration : IEntityTypeConfiguration<Comment>
         // content comment
         builder.Property(x=>x.ContentComment)
             .IsRequired();
-        // user
-        builder.HasOne(x => x.User)
+        // created
+        builder.HasOne(x => x.CreatedByUser)
             .WithMany()
-            .HasForeignKey(x=>x.UserId);
+            .HasForeignKey(x => x.CreatedBy);
+        // Modified
+        builder.HasOne(x => x.ModifiedByUser)
+            .WithMany()
+            .HasForeignKey(x=>x.ModifiedBy);
         // comment child
         builder.HasMany(x=>x.CommentChilds)
             .WithOne(x=>x.CommentParent)
             .HasForeignKey(x=>x.CommentParentId);
         // reaction comment
         builder.HasMany(x=>x.ReactionComments)
-            .WithOne(x=>x.Entity)
+            .WithOne()
             .HasForeignKey(x=>x.EntityId)
             .OnDelete(DeleteBehavior.Cascade);
         // cout reaction

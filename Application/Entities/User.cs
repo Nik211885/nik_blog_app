@@ -5,7 +5,7 @@ namespace Application.Entities;
 /// <summary>
 ///     Defined model for user
 /// </summary>
-public class User : BaseEntity
+public class User : AuditEntity
 {
     /// <summary>
     ///  Username for user and it unique for each user 
@@ -67,4 +67,8 @@ public class User : BaseEntity
     ///  Defined role for user
     /// </summary>
     public Role Role { get; set; }
+    /// <summary>
+    ///     Navigation to subject
+    /// </summary>
+    public ICollection<Subject> Subjects { get; set; }
 }

@@ -4,12 +4,8 @@ namespace Application.Entities;
 /// <summary>
 ///     Defined model comment in application
 /// </summary>
-public class Comment : BaseEntity
+public class Comment : AuditEntity
 {
-    /// <summary>
-    /// User has created comment
-    /// </summary>
-    public Guid UserId { get; set; }
     /// <summary>
     ///  Content for comment
     /// </summary>
@@ -18,10 +14,6 @@ public class Comment : BaseEntity
     /// Post to get comment
     /// </summary>
     public Guid PostId { get; set; }
-    /// <summary>
-    ///  Navigation user for ef
-    /// </summary>
-    public User User { get; set; }
     /// <summary>
     /// Navigation post for ef
     /// </summary>
@@ -33,7 +25,7 @@ public class Comment : BaseEntity
     /// <summary>
     ///  Reaction for comment
     /// </summary>
-    public ICollection<CommentReaction> ReactionComments { get; set; }
+    public ICollection<ReactionEntity> ReactionComments { get; set; }
     /// <summary>
     ///  Cout reaction for comment
     /// </summary>

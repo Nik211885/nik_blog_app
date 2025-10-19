@@ -9,6 +9,7 @@ public class LoginProviderConfiguration : IEntityTypeConfiguration<LoginProvider
     public void Configure(EntityTypeBuilder<LoginProvider> builder)
     {
         builder.HasKey(x=>x.Id);
+        
         builder.Property(x => x.Provider)
             .IsRequired()
             .HasMaxLength(50);
