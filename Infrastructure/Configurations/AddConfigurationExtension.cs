@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Configurations;
 
-public static class AddConfigurationExtension
+internal static class AddConfigurationExtension
 {
     /// <summary>
     ///  Scan all class model and add to option to services container
@@ -18,8 +18,10 @@ public static class AddConfigurationExtension
         IConfiguration  configuration)
     {
         var postgresConnection = "PostgresConnectionString";
+        var jwtAuthentication = "JwtAuthentication";
         
         services.Configure<PostgresConnectionString>(configuration.GetSection(postgresConnection));
+        services.Configure<JwtConfigurationDataModel>(configuration.GetSection(jwtAuthentication));
         return services;
     }
 }

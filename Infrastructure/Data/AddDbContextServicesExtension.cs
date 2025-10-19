@@ -12,7 +12,7 @@ internal static class AddDbContextServicesExtension
     /// <returns>
     ///     Return services collection after add application db context
     /// </returns>
-    public static IServiceCollection AddApplicationDbContext(this IServiceCollection services)
+    internal static IServiceCollection AddApplicationDbContext(this IServiceCollection services)
     {
         services.AddDbContext<ApplicationDbContext>();
         return services;

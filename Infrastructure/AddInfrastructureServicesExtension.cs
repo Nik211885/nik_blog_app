@@ -1,3 +1,4 @@
+using Infrastructure.Adapters;
 using Infrastructure.Configurations;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
@@ -23,6 +24,7 @@ public static class AddInfrastructureServicesExtension
         services.AddConfigurations(configuration);
         services.AddRepositories();
         services.AddApplicationDbContext();
+        services.AddAdapterServices();
         return services;
     }
 }
