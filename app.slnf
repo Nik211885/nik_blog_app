@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "path": "app.sln",
+    "projects": [
+      "Application\\Application.csproj",
+      "Infrastructure\\Infrastructure.csproj",
+      "WebApi\\WebApi.csproj"
+    ]
+  }
+}
