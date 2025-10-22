@@ -5,7 +5,7 @@ namespace Application.Repositories;
 /// You can reference to wrapper all instance repository in unit of work
 /// or manual create all instance with repository in here
 /// but in here make to simple i just make unit of work just is containing method manage state
-public interface IUnitOfWork : IAsyncDisposable
+public interface IUnitOfWork : IWrapperRepositories, IAsyncDisposable
 {
     /// <summary>
     ///     Create transaction 

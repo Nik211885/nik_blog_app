@@ -3,18 +3,8 @@ namespace Application.Repositories;
 ///  Base for repository it use to scan and register to di container
 /// and contains base method for each repository 
 /// </summary>
-public interface IRepositoryBase<TEntity>
+public interface IRepositoryBase<in TEntity>
 {
-    /// <summary>
-    ///     Get entity has id  
-    /// </summary>
-    /// <param name="id">id for user</param>
-    /// <param name="cancellationToken">token to cancellation</param>
-    /// <returns>
-    ///     Return entity if find entity has id exits
-    ///     Otherwise return null value
-    /// </returns>
-    Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     /// <summary>
     ///     Update state for entity is added
     /// </summary>

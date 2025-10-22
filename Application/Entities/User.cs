@@ -14,7 +14,7 @@ public class User : AuditEntity
     /// <summary>
     ///  Email for user each user just have one account email
     /// </summary>
-    public string Email { get; set; }
+    public string? Email { get; set; }
     /// <summary>
     ///  Password for user
     /// </summary>
@@ -62,13 +62,14 @@ public class User : AuditEntity
     /// <summary>
     ///    Navigation to login provider for ef
     /// </summary>
-    public ICollection<LoginProvider> LoginProviders { get; set; }
+    public ICollection<LoginProvider>? LoginProviders { get; set; }
+
     /// <summary>
     ///  Defined role for user
     /// </summary>
-    public Role Role { get; set; }
+    public Role Role { get; set; } = Role.User;
     /// <summary>
     ///     Navigation to subject
     /// </summary>
-    public ICollection<Subject> Subjects { get; set; }
+    public ICollection<Subject>? Subjects { get; set; }
 }

@@ -11,7 +11,7 @@ internal static class AddServicesExtension
     /// <returns>Services collection</returns>
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<UserManageServices>();
+        services.AddScoped<UserManagerServices>();
         return services;
     }
 }

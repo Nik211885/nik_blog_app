@@ -1,6 +1,6 @@
 namespace Application.Services;
 
-public class UserManageServices
+public static class ServicesMessageConst
 {
     
 }

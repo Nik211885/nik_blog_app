@@ -1,9 +1,8 @@
 using Application.Entities;
 using Application.ValueObject;
-using Infrastructure.Configurations;
 using Infrastructure.Data.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Data;
 /// <summary>
@@ -14,13 +13,16 @@ public class ApplicationDbContext : DbContext
     /// <summary>
     ///  Data model about connection string for postgresql
     /// </summary>
-    private readonly PostgresConnectionString  _postgresConnectionString;
+    private readonly PostgresConnectionDataModel  _postgresConnectionString;
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> context,
-        IOptions<PostgresConnectionString> postgresConnectionString)
+        IConfiguration configuration)
         : base(context)
     {
-        _postgresConnectionString = postgresConnectionString.Value;
+        PostgresConnectionDataModel? postgresConnectionDataModel = configuration
+            .GetSection("PostgresConnectionString").Get<PostgresConnectionDataModel>();
+        ArgumentNullException.ThrowIfNull(postgresConnectionDataModel);
+        _postgresConnectionString = postgresConnectionDataModel;
     }
     /// <summary>
     ///     Db set for comment
@@ -83,4 +85,13 @@ public class ApplicationDbContext : DbContext
             .ApplyConfiguration(new UserFollowerConfiguration());
         base.OnModelCreating(modelBuilder);
     }
+}
+
+
+internal class PostgresConnectionDataModel
+{
+    /// <summary>
+    ///  Main connection string for application
+    /// </summary>
+    public string Default { get; set; }
 }

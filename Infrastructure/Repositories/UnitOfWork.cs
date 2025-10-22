@@ -4,20 +4,26 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Repositories;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork : RepositoryWrapper, IUnitOfWork
 {
     /// <summary>
     ///     Instance for application db context
     /// </summary>
     private readonly ApplicationDbContext _context;
     /// <summary>
+    ///  Services provider is get instance for di container
+    /// </summary>
+    private readonly IServiceProvider _serviceProvider;
+    /// <summary>
     ///     Current transaction in unit of work
     /// </summary>
     private IDbContextTransaction? _transaction;
 
-    public UnitOfWork(ApplicationDbContext context)
+    public UnitOfWork(ApplicationDbContext context, IServiceProvider serviceProvider) 
+        : base(serviceProvider)
     {
-        _context = context;   
+        _context = context;
+        _serviceProvider = serviceProvider;
     }
 
     /// <summary>

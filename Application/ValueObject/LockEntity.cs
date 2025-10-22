@@ -7,7 +7,7 @@ public class LockEntity
     /// <summary>
     ///  Flag check to look entity
     /// </summary>
-    public bool IsLock { get; set; }
+    public bool IsLock { get; set; } = false;
     /// <summary>
     /// Reason why entity has lock
     /// </summary>
@@ -20,4 +20,5 @@ public class LockEntity
     ///  Lock entity to time
     /// </summary>
     public DateTimeOffset? LockToTime { get; set; }
+    // If lock entity
 }
