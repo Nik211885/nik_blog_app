@@ -3,7 +3,8 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories;
 
-public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
+public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> 
+    where TEntity : class, new()
 {
     private readonly ApplicationDbContext _context;
 
@@ -17,10 +18,7 @@ public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
     /// <param name="entity"></param>
     public void Add(TEntity entity)
     {
-        if (entity != null)
-        {
-            _context.Add(entity);
-        }
+        _context.Add(entity);
     }
     /// <summary>
     ///  Change state for entity is updated
@@ -28,10 +26,7 @@ public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
     /// <param name="entity"></param>
     public void Update(TEntity entity)
     {
-        if (entity != null)
-        {
-            _context.Update(entity);
-        }
+        _context.Update(entity);
     }
     /// <summary>
     ///  Change state for entity is deleted
@@ -39,9 +34,6 @@ public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
     /// <param name="entity"></param>
     public void Delete(TEntity entity)
     {
-        if (entity != null)
-        {
-            _context.Remove(entity);
-        }
+        _context.Remove(entity);
     }
 }
