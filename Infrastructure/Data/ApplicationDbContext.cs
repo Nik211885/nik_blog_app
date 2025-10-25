@@ -57,6 +57,14 @@ public class ApplicationDbContext : DbContext
     /// </summary>
     public DbSet<ReactionEntity> ReactionEntities { get; set; }
     /// <summary>
+    ///  Db set for notification template
+    /// </summary>
+    public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
+    /// <summary>
+    ///  Db set for notifications
+    /// </summary>
+    public DbSet<Notification> Notifications { get; set; }
+    /// <summary>
     ///     Override method in db context will connection postgresql with connection string has config
     /// </summary>
     /// <param name="optionsBuilder"></param>
@@ -82,7 +90,9 @@ public class ApplicationDbContext : DbContext
             .ApplyConfiguration(new SubjectConfiguration())
             .ApplyConfiguration(new UserConfiguration())
             .ApplyConfiguration(new ReactionEntityConfiguration())
-            .ApplyConfiguration(new UserFollowerConfiguration());
+            .ApplyConfiguration(new UserFollowerConfiguration())
+            .ApplyConfiguration(new NotificationConfiguration())
+            .ApplyConfiguration(new NotificationTemplateConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }
