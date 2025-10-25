@@ -18,8 +18,19 @@ public class RepositoryWrapper : IWrapperRepositories
     {
         _serviceProvider = serviceProvider;
     }
-
+    /// <summary>
+    ///  User repository in di container management
+    /// </summary>
     public IUserRepository UserRepository => GetRepository<IUserRepository>();
+    /// <summary>
+    ///  Notification repository in di container management
+    /// </summary>
+    public INotificationTemplateRepository NotificationTemplateRepository => GetRepository<INotificationTemplateRepository>();
+    /// <summary>
+    ///  mail info repository in di container management
+    /// </summary>
+    public IMalInfoRepository MailInfoRepository => GetRepository<IMalInfoRepository>();
+
     /// <summary>
     ///  Get instance for repository in services provider process case when dont have instance in container
     /// </summary>

@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251025130303_addLockAtToTableLockEntity")]
+    partial class addLockAtToTableLockEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,52 +93,6 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("LoginProviders");
                 });
 
-            modelBuilder.Entity("Application.Entities.MailInfo", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("EmailId")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<bool>("EnableSsl")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Host")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<int>("Port")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MailInfos");
-                });
-
             modelBuilder.Entity("Application.Entities.Notification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -196,9 +153,6 @@ namespace Infrastructure.Data.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("MailInfoId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("NotificationChanel")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -217,8 +171,6 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("character varying(500)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MailInfoId");
 
                     b.ToTable("NotificationTemplates");
                 });
@@ -544,17 +496,6 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("UserSendBy");
                 });
 
-            modelBuilder.Entity("Application.Entities.NotificationTemplate", b =>
-                {
-                    b.HasOne("Application.Entities.MailInfo", "MailInfo")
-                        .WithMany("NotificationTemplates")
-                        .HasForeignKey("MailInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MailInfo");
-                });
-
             modelBuilder.Entity("Application.Entities.Post", b =>
                 {
                     b.HasOne("Application.Entities.User", "CreatedByUser")
@@ -799,11 +740,6 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("CommentChilds");
 
                     b.Navigation("ReactionComments");
-                });
-
-            modelBuilder.Entity("Application.Entities.MailInfo", b =>
-                {
-                    b.Navigation("NotificationTemplates");
                 });
 
             modelBuilder.Entity("Application.Entities.Post", b =>

@@ -36,5 +36,12 @@ public class NotificationTemplate : BaseEntity
     ///  Define  notification services type for template
     /// </summary>
     public NotificationServicesType NotificationServicesType { get; set; }
-    
+    /// <summary>
+    ///  Relationship for mail info id
+    /// </summary>
+    public Guid MailInfoId { get; set; }
+    /// <summary>
+    ///  Navigation for mail info with ef
+    /// </summary>
+    public MailInfo? MailInfo { get; set; }
 }

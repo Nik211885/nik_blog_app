@@ -12,6 +12,7 @@ internal static  class AddRepositoryExtension
     /// <returns>services collection after add repositories services</returns>
     internal static IServiceCollection AddRepositories(this IServiceCollection services)
     {
+        services.AddScoped<INotificationTemplateRepository, NotificationTemplateRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;

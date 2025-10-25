@@ -1,3 +1,5 @@
+using Application.Services.MailInfoManager;
+using Application.Services.NotificationTemplateManager;
 using Application.Services.UserManager;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +15,8 @@ internal static class AddServicesExtension
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<UserManagerServices>();
+        services.AddScoped<NotificationTemplateServices>();
+        services.AddScoped<MailInfoServices>();
         return services;
     }
 }
