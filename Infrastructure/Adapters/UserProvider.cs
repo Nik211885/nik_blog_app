@@ -17,7 +17,7 @@ public class UserProvider : IUserProvider
     /// <summary>
     ///  Get user id
     /// </summary>
-    public Guid? UserId {
+    public Guid UserId {
         get
         {
             if (Guid.TryParse(_httpContextAccessor.HttpContext
@@ -26,17 +26,22 @@ public class UserProvider : IUserProvider
             {
                 return userId;
             }
-            return null;
+            throw new Exception("Invalid user id in payload");
         } 
     } 
     /// <summary>
     ///  Get username
     /// </summary>
-    public string? Username {
+    public string Username {
         get
         {
-            return _httpContextAccessor.HttpContext?.User?.Claims
+            string? userName =  _httpContextAccessor.HttpContext?.User?.Claims
                 .FirstOrDefault(c=>c.Type == ClaimTypes.Name)?.Value;
+            if (userName == null)
+            {
+                throw new Exception("Invalid user name in payload");
+            }
+            return userName;
         } 
     } 
     /// <summary>

@@ -15,7 +15,7 @@ public class LockEntity
     /// <summary>
     ///  Lock at time
     /// </summary>
-    public DateTimeOffset? LockedAt { get; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset LockedAt { get; set; } = DateTimeOffset.UtcNow;
     /// <summary>
     ///  Lock entity to time
     /// </summary>

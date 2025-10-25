@@ -19,7 +19,7 @@ public class ReactionEntity
     /// <summary>
     ///     Navigation to user for ef
     /// </summary>
-    public User User { get; set; }
+    public User? User { get; set; }
     /// <summary>
     ///  Date has reaction with post
     /// </summary>

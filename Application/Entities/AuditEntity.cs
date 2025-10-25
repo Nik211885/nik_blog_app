@@ -19,9 +19,9 @@ public abstract class AuditEntity : BaseEntity
     /// <summary>
     ///  Define user has created 
     /// </summary>
-    public User CreatedByUser { get; set; }
+    public User? CreatedByUser { get; set; }
     /// <summary>
     /// Define user has modified 
     /// </summary>
-    public User ModifiedByUser { get; set; }
+    public User? ModifiedByUser { get; set; }
 }

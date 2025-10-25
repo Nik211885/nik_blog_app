@@ -9,7 +9,7 @@ public class Comment : AuditEntity
     /// <summary>
     ///  Content for comment
     /// </summary>
-    public string ContentComment { get; set; }
+    public string ContentComment { get; set; } =  string.Empty;
     /// <summary>
     /// Post to get comment
     /// </summary>
@@ -17,7 +17,7 @@ public class Comment : AuditEntity
     /// <summary>
     /// Navigation post for ef
     /// </summary>
-    public Post Post { get; set; }
+    public Post? Post { get; set; }
     /// <summary>
     ///  Parent id  comment
     /// </summary>
@@ -25,17 +25,17 @@ public class Comment : AuditEntity
     /// <summary>
     ///  Reaction for comment
     /// </summary>
-    public ICollection<ReactionEntity> ReactionComments { get; set; }
+    public ICollection<ReactionEntity>? ReactionComments { get; set; }
     /// <summary>
     ///  Cout reaction for comment
     /// </summary>
-    public ICollection<CoutReaction> CoutReactions { get; set; }
+    public ICollection<CoutReaction>? CoutReactions { get; set; }
     /// <summary>
     ///  Comment parent
     /// </summary>
-    public Comment CommentParent { get; set; }
+    public Comment? CommentParent { get; set; }
     /// <summary>
     ///  Collection with comment child
     /// </summary>
-    public ICollection<Comment> CommentChilds { get; set; }  
+    public ICollection<Comment>? CommentChilds { get; set; }  
 }

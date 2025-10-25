@@ -10,11 +10,11 @@ public class Post : AuditEntity
     /// <summary>
     /// Title for post
     /// </summary>
-    public string Title { get; set; }  
+    public string Title { get; set; }  = String.Empty;
     /// <summary>
     /// Content for post
     /// </summary>
-    public string Content { get; set; }
+    public string Content { get; set; } = String.Empty;
     /// <summary>
     ///  Visibility for post
     /// </summary>
@@ -22,7 +22,7 @@ public class Post : AuditEntity
     /// <summary>
     ///  Slug address friendly  for post 
     /// </summary>
-    public string PostSlug { get; set; }
+    public string PostSlug { get; set; }  = String.Empty;
     /// <summary>
     /// Cout comment for post
     /// </summary>
@@ -30,17 +30,17 @@ public class Post : AuditEntity
     /// <summary>
     /// Collection subject to post navigation for ef
     /// </summary>
-    public ICollection<PostSubject> PostSubjects { get; set; }
+    public ICollection<PostSubject>? PostSubjects { get; set; }
     /// <summary>
     /// Collection reaction to post navigation for ef
     /// </summary>
-    public ICollection<ReactionEntity> ReactionPosts { get; set; }
+    public ICollection<ReactionEntity>? ReactionPosts { get; set; }
     /// <summary>
     /// Collection comments to post navigation for ef
     /// </summary>
-    public ICollection<Comment> Comments { get; set; }
+    public ICollection<Comment>? Comments { get; set; }
     /// <summary>
     ///  Cout reaction for entity 
     /// </summary>
-    public ICollection<CoutReaction> CoutReactions { get; set; }
+    public ICollection<CoutReaction>? CoutReactions { get; set; }
 }

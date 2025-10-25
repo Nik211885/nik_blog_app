@@ -52,19 +52,4 @@ public static class ThrowHelper
             throw new BusinessException(message);
         }
     }
-    /// <summary>
-    ///     Throw business exception with delegate function 
-    /// </summary>
-    /// <param name="obj">data  need check condition</param>
-    /// <param name="condition">condition with</param>
-    /// <param name="message">message when throw message</param>
-    /// <typeparam name="T">Genric with object</typeparam>
-    /// <exception cref="BusinessException">Business exception</exception>
-    public static void ThrowBusinessWithCondition<T>(T? obj, Func<T?, bool> condition, string message)
-    {
-        if (condition(obj))
-        {
-            throw new BusinessException(message);
-        }
-    }
 }

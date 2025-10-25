@@ -1,3 +1,4 @@
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,9 +8,25 @@ namespace WebApi.Controllers;
 [Route("api/health-check")]
 public class HealthCheckController : ControllerBase
 {
-    [HttpGet("application")]
-    public Results<Ok<string>, ProblemHttpResult> Get()
+    private readonly ApplicationDbContext _context;
+
+    public HealthCheckController(ApplicationDbContext context)
     {
-        return TypedResults.Ok("Health");
+        _context = context;
+    }
+    [HttpGet("application")]
+    public Results<Ok<string>, ProblemHttpResult> GetHealthApplication()
+    {
+        return TypedResults.Ok("Health!");
+    }
+
+    [HttpGet("postgres")]
+    public async Task<Results<Ok<string>, InternalServerError<string>, ProblemHttpResult>> GetHealthPostgres()
+    {
+        if (await _context.Database.CanConnectAsync())
+        {
+            return TypedResults.Ok("Postgres, Health!");
+        }
+        return TypedResults.InternalServerError("Postgres, Disconnection!");
     }
 }

@@ -7,11 +7,11 @@ public interface IUserProvider
     /// <summary>
     ///  User id in body token
     /// </summary>
-    public Guid? UserId { get; }
+    public Guid UserId { get; }
     /// <summary>
     ///  User name in token
     /// </summary>
-    public string? Username { get; }
+    public string Username { get; }
     /// <summary>
     ///  Check token has valid
     /// </summary>

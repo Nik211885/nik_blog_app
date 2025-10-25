@@ -103,5 +103,5 @@ internal class PostgresConnectionDataModel
     /// <summary>
     ///  Main connection string for application
     /// </summary>
-    public string Default { get; set; }
+    public string Default { get; set; } = string.Empty;
 }

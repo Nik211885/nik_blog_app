@@ -60,21 +60,21 @@ internal class CloudinaryConfigDataModel
     /// <summary>
     ///     Url cloudinary for upload file 
     /// </summary>
-    public string UrlUpload { get; set; }
+    public string UrlUpload { get; set; } =string.Empty;
     /// <summary>
     ///     Name your cloudinary to upload
     /// </summary>
-    public string CloudName { get; set; }
+    public string CloudName { get; set; } =string.Empty;
     /// <summary>   
     ///     Api key for your cloudinary
     /// </summary>
-    public string ApiKey { get; set; }
+    public string ApiKey { get; set; } =string.Empty;
     /// <summary>
     ///     Secret in configuration in cloudinary
     /// </summary>
-    public string ApiSecret { get; set; }
+    public string ApiSecret { get; set; } =string.Empty;
     /// <summary>
     ///     Folder you have config in cloudinary
     /// </summary>
-    public string UploadFolder { get; set; }
+    public string UploadFolder { get; set; } =string.Empty;
 }

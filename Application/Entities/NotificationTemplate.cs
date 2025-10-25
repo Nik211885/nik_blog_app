@@ -10,11 +10,11 @@ public class NotificationTemplate : BaseEntity
     /// <summary>
     ///  Code for notification template
     /// </summary>
-    public string Code { get; set; }
+    public string Code { get; set; } =  String.Empty;
     /// <summary>
     ///  Subject for notification
     /// </summary>
-    public string Subject { get; set; }
+    public string Subject { get; set; }  = String.Empty;
     /// <summary>
     ///  Content is html in template
     /// </summary>

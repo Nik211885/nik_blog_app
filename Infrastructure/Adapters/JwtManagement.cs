@@ -140,19 +140,19 @@ internal class JwtConfigurationDataModel
     ///     Url identity provider should application has trust
     ///     application know get public key and config, metadata to valid token
     /// </summary>
-    public string Authority { get; set; }
+    public string Authority { get; set; } = string.Empty;
     /// <summary>
     ///     Key to signature payload jwt
     /// </summary>
-    public string Secret { get; set; }
+    public string Secret { get; set; } =string.Empty;
     /// <summary>
     ///      Claim inside payload is identifier token has published where
     /// </summary>
-    public string Issuer { get; set; }
+    public string Issuer { get; set; } =string.Empty;
     /// <summary>
     ///     Claim inside payload is identifier token will provider what application
     /// </summary>
-    public string Audience { get; set; }
+    public string Audience { get; set; } =string.Empty;
     /// <summary>
     ///     Time stamp for expiration access token
     /// </summary>

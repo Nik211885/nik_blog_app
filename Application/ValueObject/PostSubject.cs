@@ -17,9 +17,9 @@ public class PostSubject
     /// <summary>
     ///  Navigation to post object make EF can solve 
     /// </summary>
-    public Post Posts { get; set; }
+    public Post? Posts { get; set; }
     /// <summary>
     ///  Navigation to subject object make EF can solve  
     /// </summary>
-    public Subject Subjects { get; set; }
+    public Subject? Subjects { get; set; }
 }

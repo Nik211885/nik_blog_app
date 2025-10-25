@@ -19,8 +19,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         // Email
         builder.Property(x => x.Email)
             .HasMaxLength(150);
-        builder.HasIndex(x => x.Email)
-            .IsUnique();
+        builder.HasIndex(x => x.Email);
         // Password
         builder.Property(x=>x.Password)
             .HasMaxLength(200)

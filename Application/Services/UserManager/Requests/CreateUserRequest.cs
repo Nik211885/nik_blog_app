@@ -8,16 +8,16 @@ public class CreateUserRequest
 {
     [Required(ErrorMessage = UserManageMessageConst.UserNameIsRequired)]
     [MaxLength(50, ErrorMessage = UserManageMessageConst.UserNameMaxLength)]
-    public string UserName { get; init; } 
+    public string UserName { get; init; } = string.Empty;
 
     [EmailAddress(ErrorMessage = UserManageMessageConst.EmailIsValidFormat)]
-    public string Email { get; init; }
+    public string Email { get; init; } = string.Empty;
 
     [Password(ErrorMessage = UserManageMessageConst.PasswordIsValidFormat)]
-    public string Password { get; init; }
+    public string Password { get; init; } = string.Empty;
 
     [Compare(nameof(Password), ErrorMessage = UserManageMessageConst.PasswordNotMatchConfirm)]
-    public string PasswordConfirm { get; init; } 
+    public string PasswordConfirm { get; init; }  = string.Empty;
 }
 
 

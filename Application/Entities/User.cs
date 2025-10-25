@@ -10,7 +10,7 @@ public class User : AuditEntity
     /// <summary>
     ///  Username for user and it unique for each user 
     /// </summary>
-    public string UserName { get; set; }
+    public string UserName { get; set; }  = null!;
     /// <summary>
     ///  Email for user each user just have one account email
     /// </summary>
@@ -66,11 +66,11 @@ public class User : AuditEntity
     /// <summary>
     ///  Slug for user profile
     /// </summary>
-    public string UserCvSlug { get; set; }
+    public string UserCvSlug { get; set; } =  string.Empty;
     /// <summary>
     ///  subdomain defined for each user
     /// </summary>
-    public UserSubDomain UserSubDomain { get; set; }
+    public UserSubDomain? UserSubDomain { get; set; }
     /// <summary>
     ///    Navigation to login provider for ef
     /// </summary>

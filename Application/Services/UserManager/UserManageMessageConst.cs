@@ -11,4 +11,7 @@ internal static class UserManageMessageConst
     public const string PasswordNotMatchConfirm = "Mật khẩu và xác nhận mật khẩu không khớp!";
     public const string UserNameIsExits = "Username này đã tồn tại!";
     public const string EmailIsExits = "Email này đã đc liên kết với một tài khoản khác!";
+    public const string UserNotFound = "Nguoi dùng không tồn tại!";
+    public const string AccountHasLock = "Tài khoản đã bị khóa!";
+    public const string AccountHasUnLock = "Tài khoản chưa bị khóa!";
 }

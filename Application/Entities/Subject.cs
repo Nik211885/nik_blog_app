@@ -9,11 +9,11 @@ public class Subject : AuditEntity
     /// <summary>
     ///  Name for subject
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } =  string.Empty;   
     /// <summary>
     ///  Slug for friendly for access subject
     /// </summary>
-    public string Slug { get; set; }
+    public string Slug { get; set; } =  string.Empty;
     /// <summary>
     /// Use to sort subject
     /// </summary>
@@ -29,17 +29,17 @@ public class Subject : AuditEntity
     /// <summary>
     ///   Lock for subject
     /// </summary>
-    public LockEntity LockSubject {get; set;}
+    public LockEntity? LockSubject {get; set;}
     /// <summary>
     /// Collection post to subject navigation for ef
     /// </summary>
-    public ICollection<PostSubject> PostSubjects { get; set; }  
+    public ICollection<PostSubject>? PostSubjects { get; set; }  
     /// <summary>
     ///  Navigation for parent subject
     /// </summary>
-    public Subject SubjectParent { get; set; }
+    public Subject? SubjectParent { get; set; }
     /// <summary>
     ///  Collection child subject
     /// </summary>
-    public ICollection<Subject> ChildSubject { get; set; }
+    public ICollection<Subject>? ChildSubject { get; set; }
 }

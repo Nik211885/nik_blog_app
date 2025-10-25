@@ -8,11 +8,11 @@ public class Notification : BaseEntity
     /// <summary>
     ///     Subject for notification
     /// </summary>
-    public string Subject { get; set; }
+    public string Subject { get; set; } = string.Empty;
     /// <summary>
     ///  Content for notification
     /// </summary>
-    public string Content { get; set; }
+    public string Content { get; set; } = string.Empty;
     /// <summary>
     ///  User has received notification
     /// </summary>
@@ -20,7 +20,7 @@ public class Notification : BaseEntity
     /// <summary>
     ///  Navigation for user in ef
     /// </summary>
-    public User UserReceived { get; set; }  
+    public User? UserReceived { get; set; }  
     /// <summary>
     ///  Time has sent notification
     /// </summary>
@@ -36,7 +36,7 @@ public class Notification : BaseEntity
     /// <summary>
     ///  Navigation user sent by for ef
     /// </summary>
-    public User UserSendBy { get; set; }
+    public User? UserSendBy { get; set; }
 
     /// <summary>
     ///  Flags check user received has read message
