@@ -12,7 +12,9 @@ internal static class AddAdapterServicesExtension
     /// <returns>services collection</returns>
     internal static IServiceCollection AddAdapterServices(this IServiceCollection services)
     {
+        services.AddMemoryCache();
         services.AddSingleton<IJwtManagement, JwtManagement>();
+        services.AddScoped<IEmailServices, EmailServices>();
         services.AddScoped<IUserProvider, UserProvider>();
         return services;
     }

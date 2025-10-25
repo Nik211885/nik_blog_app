@@ -16,6 +16,10 @@ public class User : AuditEntity
     /// </summary>
     public string? Email { get; set; }
     /// <summary>
+    ///  Flags for email confirm
+    /// </summary>
+    public bool EmailConfirmed { get; set; } = false;
+    /// <summary>
     ///  Password for user
     /// </summary>
     public string? Password { get; set; }
@@ -35,6 +39,14 @@ public class User : AuditEntity
     ///     Phone number for user and just have one each user
     /// </summary>
     public string? PhoneNumber { get; set; }
+    /// <summary>
+    ///  Cout when user login fail to lock account
+    /// </summary>
+    public int CoutLoginFail { get; set; } = 0;
+    /// <summary>
+    ///  Flags for phone number confirm
+    /// </summary>
+    public bool PhoneNumberConfirmed { get; set; } = false;
     /// <summary>
     ///  Url avatar for user
     /// </summary>

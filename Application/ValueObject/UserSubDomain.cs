@@ -12,10 +12,11 @@ public class UserSubDomain
     ///  Bio for sub domain
     /// </summary>
     public string? BioDomainBlog { get; set; }
+
     /// <summary>
     ///  Cout followers subdomain
     /// </summary>
-    public long CoutFlowers { get; set; }
+    public long CoutFlowers { get; set; } = 0;
     /// <summary>
     ///  lock for subdomain
     /// </summary>

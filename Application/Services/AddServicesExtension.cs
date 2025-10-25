@@ -1,3 +1,4 @@
+using Application.Services.UserManager;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Services;
