@@ -1,3 +1,4 @@
+using Application.Adapters;
 using Application.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ internal static  class AddRepositoryExtension
     {
         services.AddScoped<INotificationTemplateRepository, NotificationTemplateRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IMalInfoRepository, MailInfoRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }

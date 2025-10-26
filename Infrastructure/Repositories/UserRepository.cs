@@ -51,8 +51,7 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
     public async Task<User?> GetByUsernameAsync(string userName, CancellationToken cancellationToken = default)
     {
         User? userByUserName = await _context
-            .Users
-            .FirstOrDefaultAsync(x => x.UserName == userName, cancellationToken);
+            .Users.FirstOrDefaultAsync(x => x.UserName == userName, cancellationToken);
         return userByUserName;
     }
     /// <summary>
