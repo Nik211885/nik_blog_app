@@ -1,6 +1,6 @@
 using Application.Entities;
 using Application.Exceptions;
-using Application.Helpers;
+using Application.Extensions;
 using Application.Repositories;
 using Application.Services.UserManager.Requests;
 using Application.Services.UserManager.Responses;
@@ -35,6 +35,11 @@ public class UserManagerServices
         
         user = await _unitOfWork.UserRepository
             .GetByEmailAsync(request.UserName, cancellationToken);
+
+        // Check exits with user find by email request if find user in system match email 
+        // and email has confirmed => user has exits throw with exception
+        // if user not confirm => have multiple account with email address
+        // and when user confirm email => remove all account has duplicate email address
         if (user is not null && user.EmailConfirmed)
         {
             ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.EmailIsExits);   
@@ -85,10 +90,8 @@ public class UserManagerServices
             .UserRepository.GetByIdAsync(request.UserId, cancellationToken);
         ThrowHelper.ThrowWhenNotFoundItem(user, UserManageMessageConst.UserNotFound);
 
-        if (user.LockAccount is not null && user.LockAccount.IsLock)
-        {
-            ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.AccountHasLock);
-        }
+        UserManagerBusinessRule.CreateRule(user)
+             .CheckLockAccount();
 
         request.MapToUser(user);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
@@ -107,12 +110,12 @@ public class UserManagerServices
         User? user = await _unitOfWork
             .UserRepository.GetByIdAsync(userId, cancellationToken);
         ThrowHelper.ThrowWhenNotFoundItem(user, UserManageMessageConst.UserNotFound);
-        if (user.LockAccount is null || !user.LockAccount.IsLock)
-        {
-            ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.AccountHasUnLock);
-        }
-
-        user.LockAccount.IsLock = false;
+        
+        UserManagerBusinessRule.CreateRule(user)
+             .CheckLockAccount();
+        // Ensure after check lock lock entity not null here you can move to method into member class for user
+        // and use attribute MemberNotNull 
+        user.LockAccount!.IsLock = false;
         user.LockAccount.LockToTime = null;
         await _unitOfWork.SaveChangeAsync(cancellationToken);
         return user.MapToResponse();

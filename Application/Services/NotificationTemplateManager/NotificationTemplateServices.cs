@@ -36,9 +36,10 @@ public class NotificationTemplateServices
         
         // get all param user has passed 
         notificationTemplate = request.MapToNotificationTemplate(null);
-        NotificationTemplateBusiness.CreateRule(notificationTemplate)
+        NotificationTemplateBusinessRule.CreateRule(notificationTemplate)
             .ContentCanNotEmpty()
             .CheckChanelNotificationForTemplateType();
+
         _unitOfWork.NotificationTemplateRepository.Add(notificationTemplate);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
         return notificationTemplate.MapToResponse();

@@ -5,7 +5,7 @@ namespace Application.Entities;
 /// <summary>
 ///     Defined model for user
 /// </summary>
-public class User : AuditEntity
+public class    User : AuditEntity
 {
     /// <summary>
     ///  Username for user and it unique for each user 

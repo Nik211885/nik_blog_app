@@ -6,11 +6,11 @@ namespace Application.Services.NotificationTemplateManager;
 /// <summary>
 ///  Defined business notification template
 /// </summary>
-internal class NotificationTemplateBusiness
+internal class NotificationTemplateBusinessRule
 {
     private readonly NotificationTemplate _notificationTemplate;
 
-    private NotificationTemplateBusiness(NotificationTemplate notificationTemplate)
+    private NotificationTemplateBusinessRule(NotificationTemplate notificationTemplate)
     {
         _notificationTemplate = notificationTemplate;
     }
@@ -19,7 +19,7 @@ internal class NotificationTemplateBusiness
     ///     is just chanel mail in template just has added mail info
     ///     and with chanel mail must add mail info
     /// </summary>
-    public NotificationTemplateBusiness CheckChanelNotificationForTemplateType()
+    public NotificationTemplateBusinessRule CheckChanelNotificationForTemplateType()
     {
         if (_notificationTemplate.NotificationChanel is NotificationChanel.SendEmail or NotificationChanel.All
             && _notificationTemplate.MailInfoId is null)
@@ -38,7 +38,7 @@ internal class NotificationTemplateBusiness
     /// <summary>
     ///     Template content can not be null in text content and html content
     /// </summary>
-    public NotificationTemplateBusiness ContentCanNotEmpty()
+    public NotificationTemplateBusinessRule ContentCanNotEmpty()
     {
         if (string.IsNullOrWhiteSpace(_notificationTemplate.ContentHtml) 
             && string.IsNullOrWhiteSpace(_notificationTemplate.ContentText))
@@ -53,8 +53,8 @@ internal class NotificationTemplateBusiness
     /// </summary>
     /// <param name="notificationTemplate"></param>
     /// <returns></returns>
-    public static NotificationTemplateBusiness CreateRule(NotificationTemplate notificationTemplate)
+    public static NotificationTemplateBusinessRule CreateRule(NotificationTemplate notificationTemplate)
     {
-        return new NotificationTemplateBusiness(notificationTemplate);
+        return new NotificationTemplateBusinessRule(notificationTemplate);
     }
 }
