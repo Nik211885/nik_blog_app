@@ -69,6 +69,10 @@ public class ApplicationDbContext : DbContext
     /// </summary>
     public DbSet<MailInfo> MailInfos { get; set; }
     /// <summary>
+    ///   Db set for arguments
+    /// </summary>
+    public DbSet<Arguments> Arguments { get; set; }
+    /// <summary>
     ///     Override method in db context will connection postgresql with connection string has config
     /// </summary>
     /// <param name="optionsBuilder"></param>
@@ -97,6 +101,7 @@ public class ApplicationDbContext : DbContext
             .ApplyConfiguration(new UserFollowerConfiguration())
             .ApplyConfiguration(new NotificationConfiguration())
             .ApplyConfiguration(new MailInfoConfiguration())
+            .ApplyConfiguration(new ArgumentConfigurations())
             .ApplyConfiguration(new NotificationTemplateConfiguration());
         base.OnModelCreating(modelBuilder);
     }

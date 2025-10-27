@@ -12,6 +12,7 @@ public class MailInfoResponse
     public string UserName { get; init; } = string.Empty;
     public bool EnableSsl { get; init; }
     public bool IsActive { get; init; } = true;
+    public DateTimeOffset CreatedAt { get; init; }
 }
 
 internal static class MailInfoResponseExtensions
@@ -27,7 +28,8 @@ internal static class MailInfoResponseExtensions
             EmailId = mailInfo.EmailId,
             UserName = mailInfo.UserName,
             EnableSsl = mailInfo.EnableSsl,
-            IsActive = mailInfo.IsActive
+            IsActive = mailInfo.IsActive,
+            CreatedAt = mailInfo.CreatedAt,
         };
     }
 }

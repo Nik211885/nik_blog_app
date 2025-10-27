@@ -39,9 +39,14 @@ public class NotificationTemplate : BaseEntity
     /// <summary>
     ///  Relationship for mail info id
     /// </summary>
-    public Guid MailInfoId { get; set; }
+    public Guid? MailInfoId { get; set; }
     /// <summary>
     ///  Navigation for mail info with ef
     /// </summary>
     public MailInfo? MailInfo { get; set; }
+    /// <summary>
+    ///  Navigation for ef
+    /// </summary>
+    public ICollection<Arguments>? Arguments { get; set; } 
 }
+

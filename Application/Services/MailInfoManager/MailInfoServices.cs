@@ -33,11 +33,11 @@ public class MailInfoServices
         ThrowHelper.ThrowBusinessErrorWhenExitsItem(mailInfo, MailInfoConstMessage.EmailIdHasExits);
         
         NotificationTemplate? notificationTemplate = await _unitOfWork
-            .NotificationTemplateRepository.FindByIdAsync(request.TemplateId, cancellationToken);
+            .NotificationTemplateRepository.GetByIdAsync(request.TemplateId, cancellationToken);
         ThrowHelper.ThrowWhenNotFoundItem(notificationTemplate, MailInfoConstMessage.NotificationTemplateNotFound);
         
         // check just notification chanel is mail just has added mail info
-        MailInfoBusinessRule.MailChanelMustAddToTemplate(notificationTemplate);
+        MailInfoBusinessRule.CreateRule(notificationTemplate).MailChanelMustAddToTemplate();
         mailInfo = request.MapToMailInfo();
         // if template has added mail info before override for this mail info
         notificationTemplate.MailInfo = mailInfo;
@@ -64,10 +64,10 @@ public class MailInfoServices
         ThrowHelper.ThrowWhenNotFoundItem(mailInfo, MailInfoConstMessage.MailInfoNotFound);
         
         NotificationTemplate? notificationTemplate = await _unitOfWork
-            .NotificationTemplateRepository.FindByIdAsync(request.TemplateId, cancellationToken);
+            .NotificationTemplateRepository.GetByIdAsync(request.TemplateId, cancellationToken);
         ThrowHelper.ThrowWhenNotFoundItem(notificationTemplate, MailInfoConstMessage.NotificationTemplateNotFound);
         // check just notification chanel is mail just has added mail info
-        MailInfoBusinessRule.MailChanelMustAddToTemplate(notificationTemplate);
+        MailInfoBusinessRule.CreateRule(notificationTemplate).MailChanelMustAddToTemplate();
         // if mail info is active override for all template
         // else if template is inactive override for template but if template is active you can't change to template
         if (!request.IsActive && notificationTemplate.IsActive)
