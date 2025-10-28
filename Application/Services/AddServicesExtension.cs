@@ -1,3 +1,4 @@
+using Application.Services.ArgumentManager;
 using Application.Services.MailInfoManager;
 using Application.Services.NotificationTemplateManager;
 using Application.Services.UserManager;
@@ -17,6 +18,7 @@ internal static class AddServicesExtension
         services.AddScoped<UserManagerServices>();
         services.AddScoped<NotificationTemplateServices>();
         services.AddScoped<MailInfoServices>();
+        services.AddScoped<ArgumentServices>();
         return services;
     }
 }

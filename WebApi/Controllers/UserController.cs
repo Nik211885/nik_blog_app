@@ -52,4 +52,18 @@ public class UserController : ControllerBase
         UserResponse userResponse = await _userManagerServices.UnLockAccountAsync(userId, cancellationToken);
         return TypedResults.Ok(userResponse);
     }
+    [HttpPost("confirm-email")]
+    public async Task<Results<NoContent, BadRequest, ProblemHttpResult>> ConfirmEmail(
+        Guid userId, string token, CancellationToken cancellationToken = default)
+    {
+        await _userManagerServices.ConfirmEmailAsync(userId, token, cancellationToken);
+        return TypedResults.NoContent();
+    }
+    [HttpPost("reset-password")]
+    public async Task<Results<NoContent, BadRequest, ProblemHttpResult>> ResetPassword(
+        Guid userId, string token, ResetPasswordRequest request, CancellationToken cancellationToken = default)
+    {
+        await _userManagerServices.ResetPasswordAsync(userId, token, request, cancellationToken);
+        return TypedResults.NoContent();
+    }
 }

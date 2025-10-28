@@ -8,11 +8,11 @@ public class Arguments : BaseEntity
     /// <summary>
     ///  Code for data after query
     /// </summary>
-    public string Code { get; init; } = string.Empty;
+    public string Code { get; set; } = string.Empty;
     /// <summary>
     ///    Description for argument
     /// </summary>
-    public string Description { get; init; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     /// <summary>
     ///  Query to get data for template
     /// </summary>

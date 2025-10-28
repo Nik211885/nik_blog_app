@@ -8,6 +8,7 @@ using Application.Services.UserManager.Requests;
 using Application.Services.UserManager.Responses;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using Application.Services.UserManager.Models;
 
 namespace Application.Services.UserManager;
 
@@ -119,7 +120,7 @@ public class UserManagerServices
         
         UserManagerBusinessRule.CreateRule(user)
              .CheckLockAccount();
-        // Ensure after check lock lock entity not null here you can move to method into member class for user
+        // Ensure after check lock entity not null here you can move to method into member class for user
         // and use attribute MemberNotNull 
         user.LockAccount!.IsLock = false;
         user.LockAccount.LockToTime = null;
@@ -128,11 +129,11 @@ public class UserManagerServices
         return user.MapToResponse();
     }
     /// <summary>
-    ///     Confirm email address for user has user id if email has confirm throw exception business 
-    ///     email has confirm
+    ///     Confirm email address for user has user id if email has confirmed throw exception business 
+    ///     email has confirmed
     /// </summary>
-    /// <param name="userId">user id repesent for user need confirm email address</param>
-    /// <param name="token">token to ensure user has requried confirm email</param>
+    /// <param name="userId">user id represent for user need confirm email address</param>
+    /// <param name="token">token to ensure user has required confirm email</param>
     /// <param name="cancellation">token to cancellation action</param>
     public async Task ConfirmEmailAsync(Guid userId, string token, CancellationToken cancellation = default)
     {
@@ -142,6 +143,9 @@ public class UserManagerServices
         {
             ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.EmailAddressHasConfirm);
         }
+        UserManagerBusinessRule.CreateRule(user)
+            .ValidUserToken(DecodeUserToken(token), UserTokenType.ConfirmEmail);
+        
         user.EmailConfirmed = true;
         user.SecurityStamp = GetSecurityStampValue;
         // Find when all user has email address and delete all user don't have confirm
@@ -159,7 +163,7 @@ public class UserManagerServices
     /// </summary>
     /// <param name="userId">user need update password</param>
     /// <param name="request">includes password and password confirm</param>
-    /// <param name="token">token to ensure user has requried reset password</param>
+    /// <param name="token">token to ensure user has required to be reset password</param>
     /// <param name="cancellation">token to cancellation action</param>
     public async Task ResetPasswordAsync(Guid userId, string token, ResetPasswordRequest request 
         , CancellationToken cancellation = default)
@@ -168,9 +172,10 @@ public class UserManagerServices
         ThrowHelper.ThrowWhenNotFoundItem(user, UserManageMessageConst.UserNotFound);
 
         UserManagerBusinessRule.CreateRule(user)
+            .ValidUserToken(DecodeUserToken(token), UserTokenType.ResetPassword)
             .CheckLockAccount()
             .NewPasswordCanNotLikeOldPassword(request.Password);
-
+        
         user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
         user.SecurityStamp = GetSecurityStampValue;
         _unitOfWork.UserRepository.Update(user);
@@ -191,7 +196,7 @@ public class UserManagerServices
             UserId = user.Id.ToString(),
             UserName = user.UserName,
             SecurityStamp = user.SecurityStamp,
-            TokenExpried = DateTimeOffset.UtcNow.AddMinutes(5),
+            TokenExpired = DateTimeOffset.UtcNow.AddMinutes(5),
             TokenType = tokenType,
         };
         string jsonUserPayload = JsonSerializer.Serialize(userPayload);
@@ -199,29 +204,18 @@ public class UserManagerServices
         return token;
     }
     /// <summary>
-    ///  Verify token is compare all value in payload with information match user id
+    ///     Verify token is compare all value in payload with information match user 
     /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="token"></param>
-    /// <param name="tokenType">token type is action with verify</param>
-    /// <param name="cancellationToken">token to cacelation action</param>
+    /// <param name="token">token need to check</param>
     /// <returns>
-    ///     Return true if payload match information with user specific user id
+    ///     Return UserPayloadToken
     /// </returns>
-    public async Task<bool> VerifyUserTokenAsync(string userId, string token, UserTokenType tokenType, CancellationToken cancellationToken = default)
+    private UserPayloadToken DecodeUserToken(string token)
     {
-        if (!Guid.TryParse(userId, out Guid userGuidId))
-        {
-            ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.UserNotFound);
-        }
-        User? user = await _unitOfWork.UserRepository.GetByIdAsync(userGuidId, cancellationToken);
-        ThrowHelper.ThrowWhenNotFoundItem(user, UserManageMessageConst.UserNotFound);
         string jsonTokenPayload = _tokenEncryptionService.Decrypt(token);
         UserPayloadToken? userPayloadToken = JsonSerializer.Deserialize<UserPayloadToken>(jsonTokenPayload);
-        ArgumentNullException.ThrowIfNull(userPayloadToken);
-        // match information and expried token in payload
-
-        throw new NotImplementedException();
+        ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.InvalidUserToken);
+        return userPayloadToken;
     }
     /// <summary>
     ///  Generator security stamp value random is string base 64 with length 32 bits

@@ -17,6 +17,7 @@ internal static  class AddRepositoryExtension
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IMalInfoRepository, MailInfoRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IArgumentRepository, ArgumentRepository>();
         return services;
     }
 }

@@ -2,6 +2,7 @@
 using Application.Exceptions;
 using Application.ValueObject;
 using System.Diagnostics.CodeAnalysis;
+using Application.Services.UserManager.Models;
 
 namespace Application.Services.UserManager;
 internal class UserManagerBusinessRule
@@ -39,6 +40,26 @@ internal class UserManagerBusinessRule
         {
             ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.NewPasswordCanNotLikeOldPassword);
         }   
+        return this;
+    }
+
+    /// <summary>
+    /// Check valid token with user
+    /// </summary>
+    /// <param name="userPayloadToken">token after decode</param>
+    /// <param name="userTokenType">type of token</param>
+    /// <returns>Return this rule instance</returns>
+    public UserManagerBusinessRule ValidUserToken(UserPayloadToken userPayloadToken, UserTokenType userTokenType)
+    {
+        if (userPayloadToken.TokenExpired < DateTime.UtcNow
+            || userPayloadToken.UserId != _user.Id.ToString()
+            || userPayloadToken.SecurityStamp != _user.SecurityStamp
+            || userPayloadToken.TokenType != userTokenType
+            || userPayloadToken.UserName  != _user.UserName
+            )
+        {
+            ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.InvalidUserToken);
+        }
         return this;
     }
     /// <summary>

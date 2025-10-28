@@ -1,4 +1,4 @@
-﻿namespace Application.Services.UserManager;
+﻿namespace Application.Services.UserManager.Models;
 public enum UserTokenType
 {
     /// <summary>

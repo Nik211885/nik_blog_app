@@ -13,7 +13,11 @@ public interface IWrapperRepositories
     /// </summary>
     INotificationTemplateRepository NotificationTemplateRepository { get; }
     /// <summary>
-    ///  Repository for mail info repository
+    ///  Repository for mail info 
     /// </summary>
     IMalInfoRepository MailInfoRepository { get; }
+    /// <summary>
+    ///  Repository for argument 
+    /// </summary>
+    IArgumentRepository ArgumentRepository { get; }
 }

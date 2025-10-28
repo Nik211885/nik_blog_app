@@ -5,10 +5,10 @@ namespace Infrastructure.Repositories;
 
 /// <summary>
 ///  In here i has manual created instance for repository
-///  Otherwise you can use reflection to create repository it is magic way and in this file
-///  dont have miss open close principle
-///  Othercase you can pass injection is services provider and pass to di container
-///  will has manager lifecycle for repository and it will easy to mock
+///  Otherwise you can use reflection to create repository it is a magic way and in this file
+///  don't have miss open close principle
+///  Otherwise you can pass injection is services provider and pass to di container
+///  will have manager lifecycle for repository, and it will easy to mock,
 ///  but you need specific and add all repository to di container
 /// </summary>
 public class RepositoryWrapper : IWrapperRepositories
@@ -30,6 +30,10 @@ public class RepositoryWrapper : IWrapperRepositories
     ///  mail info repository in di container management
     /// </summary>
     public IMalInfoRepository MailInfoRepository => GetRepository<IMalInfoRepository>();
+    /// <summary>
+    ///  Get instance for argument repository in di container
+    /// </summary>
+    public IArgumentRepository ArgumentRepository => GetRepository<IArgumentRepository>();
 
     /// <summary>
     ///  Get instance for repository in services provider process case when dont have instance in container
