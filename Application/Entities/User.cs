@@ -44,6 +44,10 @@ public class    User : AuditEntity
     /// </summary>
     public int CoutLoginFail { get; set; } = 0;
     /// <summary>
+    ///     Security stamp for user
+    /// </summary>
+    public string SecurityStamp { get; set; } = string.Empty;
+    /// <summary>
     ///  Flags for phone number confirm
     /// </summary>
     public bool PhoneNumberConfirmed { get; set; } = false;

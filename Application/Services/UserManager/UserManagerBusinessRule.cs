@@ -28,6 +28,20 @@ internal class UserManagerBusinessRule
         return this;
     }
     /// <summary>
+    ///      Check if new password like with old password throw business error for that
+    ///      if user login with oath2 don't have password it will don't catch this case
+    /// </summary>
+    /// <param name="newPassword">password user need update</param>
+    /// <returns></returns>
+    public UserManagerBusinessRule NewPasswordCanNotLikeOldPassword(string newPassword)
+    {
+        if (!string.IsNullOrWhiteSpace(_user.Password) && BCrypt.Net.BCrypt.Verify(newPassword, _user.Password))
+        {
+            ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.NewPasswordCanNotLikeOldPassword);
+        }   
+        return this;
+    }
+    /// <summary>
     ///  Create new instance for user manager business rule
     /// </summary>
     /// <param name="user">user instance</param>

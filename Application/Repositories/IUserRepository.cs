@@ -21,10 +21,11 @@ public interface IUserRepository : IRepositoryBase<User>
     /// </summary>
     /// <param name="email">email for user</param>
     /// <param name="cancellationToken">token to cancellation action</param>
+    /// <param name="isConfirm">flags to find email has confirm</param>
     /// <returns>
     ///     Return user match email or return null if not find user match email
     /// </returns>
-    Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
+    Task<List<User>> GetByEmailAsync(string email, CancellationToken cancellationToken = default, bool isConfirm = true);
     /// <summary>
     /// Get user by username
     /// </summary>

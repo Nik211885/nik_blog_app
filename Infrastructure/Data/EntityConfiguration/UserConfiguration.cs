@@ -30,6 +30,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         // last name 
         builder.Property(x => x.LastName)
             .HasMaxLength(100);
+        // security stamps
+        builder.Property(x => x.SecurityStamp)
+            .HasMaxLength(50)
+            .IsRequired()
+            .IsUnicode(false);
         // full name
         builder.Property(x => x.FullName)
             .HasMaxLength(200);

@@ -14,4 +14,7 @@ internal static class UserManageMessageConst
     public const string UserNotFound = "Nguoi dùng không tồn tại!";
     public const string AccountHasLock = "Tài khoản đã bị khóa!";
     public const string AccountHasUnLock = "Tài khoản chưa bị khóa!";
+    public const string EmailAddressHasConfirm = "Tài khoản đã xác nhận địa chỉ email!";
+    public const string NewPasswordCanNotLikeOldPassword = "Mật khẩu mới và mật khẩu cũ không được trùng nhau!";
+    public const string InvalidUserToken = "Token không đúng!";
 }

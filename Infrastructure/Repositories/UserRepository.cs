@@ -31,13 +31,15 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
     /// </summary>
     /// <param name="email">email for user</param>
     /// <param name="cancellationToken">token to cancellation action</param>
+    /// <param name="isConfirm">flags to find email has confirm</param>
     /// <returns>
     /// Return user if match email otherwise is null
     /// </returns>
-    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<List<User>> GetByEmailAsync(string email,CancellationToken cancellationToken = default, bool isConfirm = true)
     {
-        User? userByEmail = await _context.Users
-            .FirstOrDefaultAsync(x => x.Email == email,cancellationToken);
+        List<User> userByEmail = await _context.Users
+            .Where(x => x.Email == email)
+            .ToListAsync(cancellationToken);
         return userByEmail;
     }
     /// <summary>
