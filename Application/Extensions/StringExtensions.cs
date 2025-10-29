@@ -26,4 +26,22 @@ internal static class StringExtensions
         second = Regex.Replace(second, @"\s+", "-").Trim('-');
         return string.Concat(first, "/", second);
     }
+    /// <summary>
+    ///  Get all name arguments in template
+    /// </summary>
+    /// <param name="template">template</param>
+    /// <returns>
+    ///     Return all arguments interpolation in template and it is distinct value not compare with lower and upper case
+    /// </returns>
+    public static string[] GetAllArgumentsInterpolateInTemplate(this string template)
+    {
+        List<string> vars = [];
+        var regex = new Regex(@"{{(\w+)}}");
+        foreach (Match match in regex.Matches(template))
+        {
+            vars.Add(match.Groups[1].Value);
+        }
+
+        return [.. vars];
+    }
 }

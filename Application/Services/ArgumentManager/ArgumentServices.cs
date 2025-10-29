@@ -4,6 +4,7 @@ using Application.Repositories;
 using Application.Services.ArgumentManager.Requests;
 using Application.Services.NotificationTemplateManager.Responses;
 using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace Application.Services.ArgumentManager;
 
@@ -11,11 +12,13 @@ public class ArgumentServices
 {
     private readonly ILogger<ArgumentServices> _logger;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IDbConnection _dbContection;
 
-    public ArgumentServices(ILogger<ArgumentServices> logger,IUnitOfWork unitOfWork)
+    public ArgumentServices(ILogger<ArgumentServices> logger,IUnitOfWork unitOfWork, IDbConnection dbConnection)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _dbContection = dbConnection;
     }
     /// <summary>
     ///  Create new instance for arguments
@@ -33,6 +36,10 @@ public class ArgumentServices
             .ArgumentRepository.GetByCodeAsync(request.Code, cancellationToken);
         ThrowHelper.ThrowBusinessErrorWhenExitsItem(arguments, ArgumentConstMessage.CodeHasExits);
         arguments = request.MapToArgument();
+
+        await ArgumentBusinessRule.CreateRule(arguments)
+            .CheckInvalidQueryAsync(_dbContection);
+
         _unitOfWork.ArgumentRepository.Add(arguments);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
         return arguments.MapToResponse();
@@ -60,6 +67,10 @@ public class ArgumentServices
             ThrowHelper.ThrowWhenBusinessError(ArgumentConstMessage.CodeHasExits);
         }
         request.MapToArgument(arguments);
+
+        await ArgumentBusinessRule.CreateRule(arguments)
+            .CheckInvalidQueryAsync(_dbContection);
+
         _unitOfWork.ArgumentRepository.Update(arguments);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
         return arguments.MapToResponse();

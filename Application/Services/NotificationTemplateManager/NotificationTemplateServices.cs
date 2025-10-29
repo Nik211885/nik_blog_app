@@ -31,14 +31,15 @@ public class NotificationTemplateServices
         NotificationTemplate? notificationTemplate = await _unitOfWork.NotificationTemplateRepository
             .GetByCodeAsync(request.Code, cancellationToken);
         ThrowHelper.ThrowBusinessErrorWhenExitsItem(notificationTemplate,NotificationTemplateConstMessage.HasExitsCode);
-        
-        // compare param with params user has passed it
-        
+
         // get all param user has passed 
         notificationTemplate = request.MapToNotificationTemplate(null);
         NotificationTemplateBusinessRule.CreateRule(notificationTemplate)
             .ContentCanNotEmpty()
-            .CheckChanelNotificationForTemplateType();
+            .CheckChanelNotificationForTemplateType()
+            .CompareArgumentInContent();
+        // compare param with params user has passed it if arguments in template bigger or
+        // smaller arguments collection throw exceptions template invalid
 
         _unitOfWork.NotificationTemplateRepository.Add(notificationTemplate);
         await _unitOfWork.SaveChangeAsync(cancellationToken);

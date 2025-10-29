@@ -26,7 +26,9 @@ public class NotificationTemplateRepository
     public async Task<NotificationTemplate?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         NotificationTemplate? notificationTemplate = await _dbContext.NotificationTemplates
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .Where(x=>x.Id == id)
+            .Include(x=>x.Arguments)
+            .FirstOrDefaultAsync(cancellationToken);
         return notificationTemplate;
     }
     /// <summary>
@@ -40,7 +42,9 @@ public class NotificationTemplateRepository
     public async Task<NotificationTemplate?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
     {
         NotificationTemplate? notificationTemplate = await _dbContext.NotificationTemplates
-            .FirstOrDefaultAsync(x => x.Code == code, cancellationToken);
+            .Where(x=>x.Code == code)
+            .Include(x => x.Arguments)
+            .FirstOrDefaultAsync(cancellationToken);
         return notificationTemplate;
     }
 }

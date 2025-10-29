@@ -2,7 +2,6 @@ using Application.Entities;
 using Application.ValueObject;
 using Infrastructure.Data.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Data;
 /// <summary>
@@ -10,19 +9,10 @@ namespace Infrastructure.Data;
 /// </summary>
 public class ApplicationDbContext : DbContext
 {
-    /// <summary>
-    ///  Data model about connection string for postgresql
-    /// </summary>
-    private readonly PostgresConnectionDataModel  _postgresConnectionString;
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> context,
-        IConfiguration configuration)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> context)
         : base(context)
     {
-        PostgresConnectionDataModel? postgresConnectionDataModel = configuration
-            .GetSection("PostgresConnectionString").Get<PostgresConnectionDataModel>();
-        ArgumentNullException.ThrowIfNull(postgresConnectionDataModel);
-        _postgresConnectionString = postgresConnectionDataModel;
     }
     /// <summary>
     ///     Db set for comment
@@ -73,15 +63,6 @@ public class ApplicationDbContext : DbContext
     /// </summary>
     public DbSet<Arguments> Arguments { get; set; }
     /// <summary>
-    ///     Override method in db context will connection postgresql with connection string has config
-    /// </summary>
-    /// <param name="optionsBuilder"></param>
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseNpgsql(_postgresConnectionString.Default);
-        base.OnConfiguring(optionsBuilder);
-    }
-    /// <summary>
     ///     Override method design database with ef it will scan assembly has inherent
     ///     for type is IEntityTypeConfiguration add execute with config each db set
     /// </summary>
@@ -105,13 +86,4 @@ public class ApplicationDbContext : DbContext
             .ApplyConfiguration(new NotificationTemplateConfiguration());
         base.OnModelCreating(modelBuilder);
     }
-}
-
-
-internal class PostgresConnectionDataModel
-{
-    /// <summary>
-    ///  Main connection string for application
-    /// </summary>
-    public string Default { get; set; } = string.Empty;
 }

@@ -1,6 +1,7 @@
 using Application.Entities;
 using Application.Enums;
 using Application.Exceptions;
+using Application.Extensions;
 
 namespace Application.Services.NotificationTemplateManager;
 /// <summary>
@@ -46,6 +47,24 @@ internal class NotificationTemplateBusinessRule
             ThrowHelper.ThrowWhenBusinessError(NotificationTemplateConstMessage.ContentCanNotBeNull);
         }
 
+        return this;
+    }
+    /// <summary>
+    ///     Compare argument in content arguments must equals argument interpolate in template
+    /// </summary>
+    public NotificationTemplateBusinessRule CompareArgumentInContent()
+    {
+        var keysToRemove = new[] { "username", "userId"};
+        string content = _notificationTemplate.ContentHtml ?? _notificationTemplate.ContentText
+            ?? throw new ArgumentNullException(nameof(content));
+        var argumentsInterpolate = content.GetAllArgumentsInterpolateInTemplate().ToList();
+        argumentsInterpolate.RemoveAll(x =>
+            keysToRemove.Any(k => x.Equals(k, StringComparison.OrdinalIgnoreCase))
+        );
+        if (argumentsInterpolate.Count() != _notificationTemplate.Arguments?.Count())
+        {
+            ThrowHelper.ThrowWhenBusinessError(NotificationTemplateConstMessage.ArgumentInContentMustEqualsArguments);
+        }
         return this;
     }
     /// <summary>
