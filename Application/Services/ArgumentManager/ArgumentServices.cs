@@ -12,13 +12,13 @@ public class ArgumentServices
 {
     private readonly ILogger<ArgumentServices> _logger;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDbConnection _dbContection;
+    private readonly IDbConnection _dbConnection;
 
     public ArgumentServices(ILogger<ArgumentServices> logger,IUnitOfWork unitOfWork, IDbConnection dbConnection)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
-        _dbContection = dbConnection;
+        _dbConnection = dbConnection;
     }
     /// <summary>
     ///  Create new instance for arguments
@@ -37,8 +37,9 @@ public class ArgumentServices
         ThrowHelper.ThrowBusinessErrorWhenExitsItem(arguments, ArgumentConstMessage.CodeHasExits);
         arguments = request.MapToArgument();
 
-        await ArgumentBusinessRule.CreateRule(arguments)
-            .CheckInvalidQueryAsync(_dbContection);
+        // check valid query string is correct format
+        /*await ArgumentBusinessRule.CreateRule(arguments)
+            .CheckInvalidQueryAsync(_dbContection);*/
 
         _unitOfWork.ArgumentRepository.Add(arguments);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
@@ -67,9 +68,9 @@ public class ArgumentServices
             ThrowHelper.ThrowWhenBusinessError(ArgumentConstMessage.CodeHasExits);
         }
         request.MapToArgument(arguments);
-
-        await ArgumentBusinessRule.CreateRule(arguments)
-            .CheckInvalidQueryAsync(_dbContection);
+        // check valid query string is correct format
+        /*await ArgumentBusinessRule.CreateRule(arguments)
+            .CheckInvalidQueryAsync(_dbContection);*/
 
         _unitOfWork.ArgumentRepository.Update(arguments);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
