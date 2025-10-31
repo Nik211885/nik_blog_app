@@ -39,25 +39,10 @@ internal static class AddDbContextServicesExtension
     /// <param name="services">services collection will build for services provider</param>
     private static void MigrationDatabase(this IServiceCollection services)
     {
-        ApplicationDbContext dbContext = services.GetApplicatioDbContextFromDiContaine();
-        if (dbContext.Database.EnsureCreated())
-        {
-            dbContext.Database.Migrate();
-        }
-    }
-    /// <summary>
-    ///  Get application db context from di container with scope
-    /// </summary>
-    /// <param name="services">services collection</param>
-    /// <returns>
-    ///     Return application db context after get in di container
-    /// </returns>
-    private static ApplicationDbContext GetApplicatioDbContextFromDiContaine(this IServiceCollection services)
-    {
-        IServiceProvider serviceProvider = services.BuildServiceProvider();
-        using IServiceScope scope = serviceProvider.CreateScope();
-        ApplicationDbContext applicationDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        return applicationDbContext;
+	using var scope = services.BuildServiceProvider().CreateScope();
+	ApplicationDbContext? dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+       	ArgumentNullException.ThrowIfNull(dbContext);
+       	dbContext.Database.Migrate();
     }
     /// <summary>
     ///  Get connection string form config in presentation with configurations services
