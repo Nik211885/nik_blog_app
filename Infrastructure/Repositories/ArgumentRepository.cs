@@ -43,4 +43,18 @@ public class ArgumentRepository
             FirstOrDefaultAsync(x=>x.Id == id, cancellationToken);
         return argument;
     }
+    /// <summary>
+    ///     Create all instance argument match with ids
+    /// </summary>
+    /// <param name="cancellationToken">token to cancellation action</param>
+    /// <param name="ids">ids match to find argument</param>
+    /// <returns>
+    ///     Return list of argument match ids 
+    /// </returns>
+    public async Task<IEnumerable<Arguments>> GetByIdsAsync(CancellationToken cancellationToken = default, params Guid[] ids)
+    {
+        List<Arguments> arguments = await _context.Arguments.Where(x => ids.Contains(x.Id))
+                                    .ToListAsync(cancellationToken);
+        return arguments;
+    }
 }

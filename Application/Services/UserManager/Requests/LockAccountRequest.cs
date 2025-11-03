@@ -10,7 +10,7 @@ public class LockAccountRequest
     public DateTimeOffset LockToTime { get; init; }
 }
 
-internal static class LockAccountRequestExtension
+public static class LockAccountRequestExtension
 {
     public static void MapToUser(this LockAccountRequest request, User user)
     {

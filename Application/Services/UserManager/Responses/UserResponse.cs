@@ -15,7 +15,8 @@ public class UserResponse
        public string? LastName{ get; init; }
        public string? FullName{ get; init; }
        public string? PhoneNumber{ get; init; }
-       public bool PhoneNumberConfirm{ get; init; }
+       public bool PhoneNumberConfirm { get; init; }
+        public string SecurityStamp { get; init; } = string.Empty;
        public string? AvatarUrl{ get; init; }
        public DateTimeOffset? BirthDay{ get; init; }
        public string? Bio{ get; init; }
@@ -25,7 +26,7 @@ public class UserResponse
 };
 
 
-internal static class UserResponseExtension
+public static class UserResponseExtension
 {
     public static UserResponse MapToResponse(this User user)
     {
@@ -45,6 +46,7 @@ internal static class UserResponseExtension
             AvatarUrl = user.Avatar,
             BirthDay = user.BirthDay,
             Bio = user.Bio,
+            SecurityStamp = user.SecurityStamp,
             UserCvSlug = user.UserCvSlug,
             LoginFail = user.CoutLoginFail,
             LockUser = user.LockAccount?.MapToResponse()

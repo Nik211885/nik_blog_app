@@ -32,7 +32,7 @@ public class UserManagerServices
     /// <returns>
     ///    Return user response with information if user has created success
     /// </returns>
-    public async Task<UserResponse> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken = default)
+    public async Task<User> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken = default)
     {
         // validation with unique value
         User? user = await _unitOfWork.UserRepository
@@ -57,7 +57,7 @@ public class UserManagerServices
         // Send mail to confirm email you can write here or use ideal with eda
         _unitOfWork.UserRepository.Add(user);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
-        return user.MapToResponse();
+        return user;
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public class UserManagerServices
     /// <returns>
     ///     Return information user after update success
     /// </returns>
-    public async Task<UserResponse> UpdateUserAsync(Guid userId, UpdateUserRequest request, CancellationToken cancellationToken = default)
+    public async Task<User> UpdateUserAsync(Guid userId, UpdateUserRequest request, CancellationToken cancellationToken = default)
     {
         User? user = await _unitOfWork
             .UserRepository.GetByIdAsync(userId, cancellationToken);
@@ -78,7 +78,7 @@ public class UserManagerServices
         request.MapToUser(user);
         user.SecurityStamp = GetSecurityStampValue;
         await _unitOfWork.SaveChangeAsync(cancellationToken);
-        return user.MapToResponse();
+        return user;
     }
     /// <summary>
     ///  Lock account
@@ -89,7 +89,7 @@ public class UserManagerServices
     ///     Return user after lock
     /// </returns>
 
-    public async Task<UserResponse> LockAccountAsync(LockAccountRequest request,
+    public async Task<User> LockAccountAsync(LockAccountRequest request,
         CancellationToken cancellationToken = default)
     {
         User? user = await _unitOfWork
@@ -102,7 +102,7 @@ public class UserManagerServices
         request.MapToUser(user);
         user.SecurityStamp = GetSecurityStampValue;
         await _unitOfWork.SaveChangeAsync(cancellationToken);
-        return user.MapToResponse();
+        return user;
     }
     /// <summary>
     ///     Unlock account
@@ -112,7 +112,7 @@ public class UserManagerServices
     /// <returns>
     ///    Return user after unlock
     /// </returns>
-    public async Task<UserResponse> UnLockAccountAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<User> UnLockAccountAsync(Guid userId, CancellationToken cancellationToken = default)
     {
         User? user = await _unitOfWork
             .UserRepository.GetByIdAsync(userId, cancellationToken);
@@ -126,7 +126,7 @@ public class UserManagerServices
         user.LockAccount.LockToTime = null;
         user.SecurityStamp = GetSecurityStampValue;
         await _unitOfWork.SaveChangeAsync(cancellationToken);
-        return user.MapToResponse();
+        return user;
     }
     /// <summary>
     ///     Confirm email address for user has user id if email has confirmed throw exception business 

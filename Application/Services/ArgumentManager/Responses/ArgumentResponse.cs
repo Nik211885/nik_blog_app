@@ -11,7 +11,7 @@ public class ArgumentResponse
     public DateTimeOffset CreatedAt { get; init; }
 }
 
-internal static class ArgumentResponseExtension
+public static class ArgumentResponseExtension
 {
     public static ArgumentResponse MapToResponse(this Arguments arguments)
     {

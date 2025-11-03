@@ -22,5 +22,14 @@ public interface IArgumentRepository
     /// <returns>
     ///     Return argument if match the id otherwise null value
     /// </returns>
-    Task<Arguments?> GetByIdAsync(Guid id,  CancellationToken cancellationToken = default);
+    Task<Arguments?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    /// <summary>
+    ///     Create all instance argument match with ids
+    /// </summary>
+    /// <param name="cancellationToken">token to cancellation action</param>
+    /// <param name="ids">ids match to find argument</param>
+    /// <returns>
+    ///     Return list of argument match ids 
+    /// </returns>
+    Task<IEnumerable<Arguments>> GetByIdsAsync(CancellationToken cancellationToken = default, params Guid[] ids);
 }

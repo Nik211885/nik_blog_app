@@ -20,7 +20,7 @@ public class UpdateMailInfoRequest
     public Guid TemplateId {get; init; }
 }
 
-internal static class UpdateMailInfoRequestExtension
+public static class UpdateMailInfoRequestExtension
 {
     public static void MapToMailInfo(this UpdateMailInfoRequest request, MailInfo mailInfo)
     {

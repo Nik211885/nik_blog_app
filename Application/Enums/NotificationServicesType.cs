@@ -11,7 +11,7 @@ public enum NotificationServicesType
     /// <summary>
     ///   Services change password
     /// </summary>
-    ChangePassword,
+    ResetPassword,
     /// <summary>
     ///   Services confirm password
     /// </summary>

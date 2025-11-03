@@ -2,7 +2,6 @@ using Application.Entities;
 using Application.Exceptions;
 using Application.Repositories;
 using Application.Services.MailInfoManager.Requests;
-using Application.Services.MailInfoManager.Responses;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services.MailInfoManager;
@@ -12,7 +11,7 @@ public class MailInfoServices
     private readonly ILogger<MailInfoServices> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public MailInfoServices(ILogger<MailInfoServices> logger, IUnitOfWork unitOfWork)
+    public MailInfoServices(ILogger<MailInfoServices> logger,  IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
@@ -25,7 +24,7 @@ public class MailInfoServices
     /// <returns>
     ///     Return mail info response when create mail info success
     /// </returns>
-    public async Task<MailInfoResponse> CreateMailInfoAsync(CreateMailInfoRequest request,
+    public async Task<MailInfo> CreateMailInfoAsync(CreateMailInfoRequest request,
         CancellationToken cancellationToken = default)
     {
         MailInfo? mailInfo = await _unitOfWork.MailInfoRepository
@@ -45,7 +44,7 @@ public class MailInfoServices
         _unitOfWork.MailInfoRepository.Add(mailInfo);
         _unitOfWork.NotificationTemplateRepository.Update(notificationTemplate);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
-        return mailInfo.MapToResponse();
+        return mailInfo;
     }
     /// <summary>
     ///     Update mail info
@@ -56,13 +55,13 @@ public class MailInfoServices
     ///     Return mail info response when update mail info success and
     ///     throw not found exception when not found mail info with id mail info
     /// </returns>
-    public async Task<MailInfoResponse> UpdateMailInfoAsync(UpdateMailInfoRequest request,
+    public async Task<MailInfo> UpdateMailInfoAsync(UpdateMailInfoRequest request,
         CancellationToken cancellationToken = default)
     {
         MailInfo? mailInfo = await _unitOfWork.MailInfoRepository
             .GetMailInfoByIdAsync(request.MailInfoId, cancellationToken);
         ThrowHelper.ThrowWhenNotFoundItem(mailInfo, MailInfoConstMessage.MailInfoNotFound);
-        
+
         NotificationTemplate? notificationTemplate = await _unitOfWork
             .NotificationTemplateRepository.GetByIdAsync(request.TemplateId, cancellationToken);
         ThrowHelper.ThrowWhenNotFoundItem(notificationTemplate, MailInfoConstMessage.NotificationTemplateNotFound);
@@ -78,7 +77,7 @@ public class MailInfoServices
         request.MapToMailInfo(mailInfo);
         _unitOfWork.MailInfoRepository.Update(mailInfo);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
-        return mailInfo.MapToResponse();
+        return mailInfo;
     }
     
 }

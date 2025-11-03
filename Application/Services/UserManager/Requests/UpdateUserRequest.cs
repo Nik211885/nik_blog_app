@@ -14,7 +14,7 @@ public class UpdateUserRequest
     
 }
 
-internal static class UpdateUserRequestExtension
+public static class UpdateUserRequestExtension
 {
     public static void MapToUser(this UpdateUserRequest request, User  user)
     {

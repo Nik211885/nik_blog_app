@@ -15,7 +15,7 @@ public class UpdateArgumentResponse
 }
 
 
-internal static class UpdateArgumentRequestExtensions
+public static class UpdateArgumentRequestExtensions
 {
     public static void MapToArgument(this UpdateArgumentResponse request, Arguments arguments)
     {

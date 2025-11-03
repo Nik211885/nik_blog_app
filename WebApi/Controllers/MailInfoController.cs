@@ -25,8 +25,8 @@ public class MailInfoController : ControllerBase
     public async Task<Results<Ok<MailInfoResponse>, BadRequest, ProblemHttpResult, UnauthorizedHttpResult>>
         CreateMailInfo(CreateMailInfoRequest request, CancellationToken cancellationToken = default)
     {
-        MailInfoResponse mailInfoResponse = await _mailInfoServices.CreateMailInfoAsync(request, cancellationToken);
-        return TypedResults.Ok(mailInfoResponse);
+        var mailInfo = await _mailInfoServices.CreateMailInfoAsync(request, cancellationToken);
+        return TypedResults.Ok(mailInfo.MapToResponse());
     }
 
     [HttpPut("update")]
@@ -34,7 +34,7 @@ public class MailInfoController : ControllerBase
     public async Task<Results<Ok<MailInfoResponse>, BadRequest, ProblemHttpResult, UnauthorizedHttpResult>>
         UpdateMailInfo(UpdateMailInfoRequest request, CancellationToken cancellationToken = default)
     {
-        MailInfoResponse mailInfoResponse = await _mailInfoServices.UpdateMailInfoAsync(request, cancellationToken);
-        return TypedResults.Ok(mailInfoResponse);
+        var mailInfo = await _mailInfoServices.UpdateMailInfoAsync(request, cancellationToken);
+        return TypedResults.Ok(mailInfo.MapToResponse());
     }
 }

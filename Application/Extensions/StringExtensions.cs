@@ -7,7 +7,7 @@ namespace Application.Extensions;
 /// <summary>
 ///  Contains all behavior extension is static method
 /// </summary>
-internal static class StringExtensions
+internal static partial class StringExtensions
 {
     /// <summary>
     ///  Generator slug for value 
@@ -36,7 +36,7 @@ internal static class StringExtensions
     public static string[] GetAllArgumentsInterpolateInTemplate(this string template)
     {
         List<string> vars = [];
-        var regex = new Regex(@"{{(\w+)}}");
+        var regex = InterpolateStringRegex();
         foreach (Match match in regex.Matches(template))
         {
             vars.Add(match.Groups[1].Value);
@@ -44,4 +44,24 @@ internal static class StringExtensions
 
         return [.. vars];
     }
+    /// <summary>
+    ///  Add param into string interpolate 
+    /// </summary>
+    /// <param name="interpolate">string interpolate</param>
+    /// <param name="param">param to fill into string</param>
+    /// <returns>
+    ///     Return string after fill all param into interpolate string
+    /// </returns>
+    public static string InterpolateStringWithDictionaryParam(this string interpolate, Dictionary<string, object?> param)
+    {
+        string result = InterpolateStringRegex().Replace(interpolate, match =>
+        {
+            string key = match.Groups[1].Value;
+            return param.TryGetValue(key, out var val) ? val?.ToString() ?? string.Empty : match.Value;
+        });
+        return result;
+    }
+
+    [GeneratedRegex(@"\{\{(\w+)\}\}")]
+    private static partial Regex InterpolateStringRegex();
 }

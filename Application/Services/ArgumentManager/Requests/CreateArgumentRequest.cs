@@ -13,7 +13,7 @@ public class CreateArgumentRequest
     public string Query { get; init; } = string.Empty;
 }
 
-internal static class CreateArgumentRequestExtensions
+public static class CreateArgumentRequestExtensions
 {
     public static Arguments MapToArgument(this  CreateArgumentRequest request)
     {

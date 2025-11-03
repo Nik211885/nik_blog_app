@@ -23,9 +23,9 @@ public class NotificationTemplateController
     public async Task<Results<Ok<NotificationTemplateResponse>, BadRequest, ProblemHttpResult, UnauthorizedHttpResult>>
         CreateMailInfo(CreateNotificationTemplateRequest request, CancellationToken cancellationToken = default)
     {
-        NotificationTemplateResponse notificationTemplateResponse = await _notificationTemplateServices
+        var notificationTemplate = await _notificationTemplateServices
             .CreateNotificationTemplateAsync(request, cancellationToken);
-        return TypedResults.Ok(notificationTemplateResponse);
+        return TypedResults.Ok(notificationTemplate.MapToResponse());
     }
     
 }

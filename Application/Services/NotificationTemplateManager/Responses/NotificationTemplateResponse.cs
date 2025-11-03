@@ -1,10 +1,11 @@
 using Application.Entities;
 using Application.Enums;
+using Application.Services.ArgumentManager.Responses;
 using Application.Services.MailInfoManager.Responses;
 
 namespace Application.Services.NotificationTemplateManager.Responses;
 
-public class NotificationTemplateResponse
+public  class NotificationTemplateResponse
 {
     public Guid Id { get; init; }
     public string Code { get; init; } =  string.Empty;
@@ -18,7 +19,7 @@ public class NotificationTemplateResponse
     public ICollection<ArgumentResponse>? Arguments { get; init; }
 }
 
-internal static class NotificationTemplateResponseExtensions
+public static class NotificationTemplateResponseExtensions
 {
     public static NotificationTemplateResponse MapToResponse(this NotificationTemplate notificationTemplate)
     {

@@ -20,7 +20,7 @@ public class CreateMailInfoRequest
     public Guid TemplateId { get; init; }
 }
 
-internal static class CreateMailInfoRequestExtension
+public static class CreateMailInfoRequestExtension
 {
     public static MailInfo MapToMailInfo(this CreateMailInfoRequest request)
     {

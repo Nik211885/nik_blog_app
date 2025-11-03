@@ -21,7 +21,7 @@ public class CreateUserRequest
 }
 
 
-internal static class CreateUserRequestExtension
+public static class CreateUserRequestExtension
 {
     public static User MapToUser(this CreateUserRequest request)
     {

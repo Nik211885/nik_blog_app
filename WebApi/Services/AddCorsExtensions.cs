@@ -1,5 +1,3 @@
-using Microsoft.Identity.Client.Http.Retry;
-
 namespace WebApi.Services;
 
 internal static class AddCorsExtensions

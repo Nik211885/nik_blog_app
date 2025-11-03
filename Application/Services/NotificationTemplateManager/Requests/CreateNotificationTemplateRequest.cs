@@ -18,7 +18,7 @@ public class CreateNotificationTemplateRequest
     public ICollection<Guid>? ArgumentsId { get; init; }
 }
 
-internal static class CreateNotificationTemplateRequestExtension
+public static class CreateNotificationTemplateRequestExtension
 {
     public static NotificationTemplate MapToNotificationTemplate(this CreateNotificationTemplateRequest request,
         ICollection<Arguments>? arguments)

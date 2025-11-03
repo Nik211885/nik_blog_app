@@ -1,10 +1,13 @@
+using Application.Adapters;
 using Application.Entities;
 using Application.Exceptions;
+using Application.Extensions;
 using Application.Repositories;
 using Application.Services.ArgumentManager.Requests;
 using Application.Services.NotificationTemplateManager.Responses;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Dynamic;
 
 namespace Application.Services.ArgumentManager;
 
@@ -12,13 +15,13 @@ public class ArgumentServices
 {
     private readonly ILogger<ArgumentServices> _logger;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IDbConnection _dbConnection;
+    private readonly IConnectionQueryService _connectionQueryServices;
 
-    public ArgumentServices(ILogger<ArgumentServices> logger,IUnitOfWork unitOfWork, IDbConnection dbConnection)
+    public ArgumentServices(ILogger<ArgumentServices> logger,IUnitOfWork unitOfWork, IConnectionQueryService connectionQueryService)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
-        _dbConnection = dbConnection;
+        _connectionQueryServices = connectionQueryService;
     }
     /// <summary>
     ///  Create new instance for arguments
@@ -29,7 +32,7 @@ public class ArgumentServices
     ///     Return argument response after create success
     /// </returns>
 
-    public async Task<ArgumentResponse> CreateArgumentAsync(CreateArgumentRequest request,
+    public async Task<Arguments> CreateArgumentAsync(CreateArgumentRequest request,
         CancellationToken cancellationToken = default)
     {
         Arguments? arguments = await _unitOfWork
@@ -40,10 +43,11 @@ public class ArgumentServices
         // check valid query string is correct format
         /*await ArgumentBusinessRule.CreateRule(arguments)
             .CheckInvalidQueryAsync(_dbContection);*/
+        await TestArgumentWithQueryAsync(arguments);
 
         _unitOfWork.ArgumentRepository.Add(arguments);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
-        return arguments.MapToResponse();
+        return arguments;
     }
     /// <summary>
     ///   Update information with argument
@@ -54,7 +58,7 @@ public class ArgumentServices
     ///     Return argument response after updated success
     /// </returns>
 
-    public async Task<ArgumentResponse> UpdateArgumentAsync(UpdateArgumentResponse request,
+    public async Task<Arguments> UpdateArgumentAsync(UpdateArgumentResponse request,
         CancellationToken cancellationToken = default)
     {
         Arguments? arguments = await _unitOfWork.ArgumentRepository
@@ -71,9 +75,32 @@ public class ArgumentServices
         // check valid query string is correct format
         /*await ArgumentBusinessRule.CreateRule(arguments)
             .CheckInvalidQueryAsync(_dbContection);*/
+        await TestArgumentWithQueryAsync(arguments);
 
         _unitOfWork.ArgumentRepository.Update(arguments);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
-        return arguments.MapToResponse();
+        return arguments;
     }
+    /// <summary>
+    ///     Try to test query with get argument
+    /// </summary>
+    /// <param name="arguments">argument need test query</param>
+    private async Task TestArgumentWithQueryAsync(Arguments arguments)
+    {
+        string[] paramInQuery = arguments.Query.GetAllArgumentsInterpolateInTemplate();
+        var parameters = new ExpandoObject() as IDictionary<string, object?>;
+        foreach (var p in paramInQuery)
+        {
+            parameters[p] = null;
+        }
+        try
+        {
+            _ = await _connectionQueryServices.QueryFirstOrDefaultAsync<object>(arguments.Query, parameters);
+        }
+        catch
+        {
+            ThrowHelper.ThrowWhenBusinessError(ArgumentConstMessage.InvalidQuery);
+        }
+    }
+
 }

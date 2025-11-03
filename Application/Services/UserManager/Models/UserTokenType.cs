@@ -1,4 +1,5 @@
 ﻿namespace Application.Services.UserManager.Models;
+
 public enum UserTokenType
 {
     /// <summary>
@@ -9,4 +10,8 @@ public enum UserTokenType
     ///    Type token to reset password
     /// </summary>
     ResetPassword,
+    /// <summary>
+    ///     Type token when has created new account
+    /// </summary>
+    CreateAccount,
 }

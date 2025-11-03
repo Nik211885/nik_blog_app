@@ -16,6 +16,7 @@ internal static class AddAdapterServicesExtension
         services.AddSingleton<IJwtManagement, JwtManagement>();
         services.AddScoped<IEmailServices, EmailServices>();
         services.AddScoped<IUserProvider, UserProvider>();
+        services.AddScoped<IConnectionQueryService, ConnectionQueryServices>();
         services.AddSingleton<ITokenEncryptionService, TokenEncryptionService>();
         return services;
     }

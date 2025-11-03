@@ -54,16 +54,25 @@ internal class NotificationTemplateBusinessRule
     /// </summary>
     public NotificationTemplateBusinessRule CompareArgumentInContent()
     {
-        var keysToRemove = new[] { "username", "userId"};
         string content = _notificationTemplate.ContentHtml ?? _notificationTemplate.ContentText
             ?? throw new ArgumentNullException(nameof(content));
         var argumentsInterpolate = content.GetAllArgumentsInterpolateInTemplate().ToList();
-        argumentsInterpolate.RemoveAll(x =>
-            keysToRemove.Any(k => x.Equals(k, StringComparison.OrdinalIgnoreCase))
-        );
-        if (argumentsInterpolate.Count() != _notificationTemplate.Arguments?.Count())
+        if (argumentsInterpolate.Count != _notificationTemplate.Arguments?.Count)
         {
             ThrowHelper.ThrowWhenBusinessError(NotificationTemplateConstMessage.ArgumentInContentMustEqualsArguments);
+        }
+        return this;
+    }
+    /// <summary>
+    ///    Check mail infor for template push mail when push to email must exits mail infor and it support for mail chanel
+    /// </summary>
+    /// <returns></returns>
+    public NotificationTemplateBusinessRule CheckMailInfoForTemplatePushMail()
+    {
+        if (_notificationTemplate.MailInfoId is null
+            || (_notificationTemplate.NotificationChanel is not NotificationChanel.SendEmail or NotificationChanel.All))
+        {
+            ThrowHelper.ThrowWhenBusinessError(NotificationTemplateConstMessage.CanNotFindMailInfoToSendTemplate);
         }
         return this;
     }

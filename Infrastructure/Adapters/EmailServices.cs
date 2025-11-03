@@ -1,5 +1,4 @@
 using Application.Adapters;
-using Application.Repositories;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
@@ -25,15 +24,15 @@ public class EmailServices : IEmailServices
     /// <param name="to"></param>
     /// <param name="content"></param>
     /// <param name="subject"></param>
-    /// <param name="contentHtml"></param>
+    /// <param name="isHtml"></param>
     /// <param name="host"></param>
     /// <param name="port"></param>
     /// <param name="useSsl"></param>
     /// <param name="applicationPassword"></param>
     /// <param name="nameTo"></param>
     /// <param name="nameFrom"></param>
-    public async Task SendEmailAsync(string from, string to, string? content, string subject, string? contentHtml,
-        string host, int port, bool useSsl, string applicationPassword, string? nameTo = null, string? nameFrom = null)
+    public async Task SendEmailAsync(string from, string to, string? content, string subject, bool isHtml, string host,
+        int port, bool useSsl, string applicationPassword, string? nameTo = null, string? nameFrom = null)
     {
         try
         {
@@ -44,9 +43,9 @@ public class EmailServices : IEmailServices
             emailMessage.To.Add(emailTo);
             emailMessage.Subject = subject;
             var bodyBuilder = new BodyBuilder();
-            if (contentHtml != null)
+            if (isHtml)
             {
-                bodyBuilder.HtmlBody = contentHtml;
+                bodyBuilder.HtmlBody = content;
             }
             else
             {

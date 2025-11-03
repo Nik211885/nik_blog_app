@@ -15,7 +15,7 @@ public class MailInfoResponse
     public DateTimeOffset CreatedAt { get; init; }
 }
 
-internal static class MailInfoResponseExtensions
+public static class MailInfoResponseExtensions
 {
     public static MailInfoResponse MapToResponse(this MailInfo mailInfo)
     {
