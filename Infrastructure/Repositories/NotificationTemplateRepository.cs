@@ -11,7 +11,7 @@ public class NotificationTemplateRepository
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public NotificationTemplateRepository(ApplicationDbContext dbContext) 
+    public NotificationTemplateRepository(ApplicationDbContext dbContext)
         : base(dbContext)
     {
         _dbContext = dbContext;
@@ -27,9 +27,9 @@ public class NotificationTemplateRepository
     public async Task<NotificationTemplate?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         NotificationTemplate? notificationTemplate = await _dbContext.NotificationTemplates
-            .Where(x=>x.Id == id)
-            .Include(x=>x.Arguments)
-            .Include(x=>x.MailInfo)
+            .Where(x => x.Id == id)
+            .Include(x => x.Arguments)
+            .Include(x => x.MailInfo)
             .FirstOrDefaultAsync(cancellationToken);
         return notificationTemplate;
     }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Data;
 
-public class ApplicationDbContextDesignTime 
+public class ApplicationDbContextDesignTime
     : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
     public ApplicationDbContext CreateDbContext(string[] args)

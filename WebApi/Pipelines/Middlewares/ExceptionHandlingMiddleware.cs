@@ -3,7 +3,7 @@ using Application.Exceptions;
 
 namespace WebApi.Pipelines.Middlewares;
 
-public class ExceptionHandlingMiddleware 
+public class ExceptionHandlingMiddleware
 {
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
     private readonly RequestDelegate _next;
@@ -81,12 +81,12 @@ public class ExceptionHandlingMiddleware
         }
         return new
         {
-            title =  title,
+            title = title,
             traceId = traceId,
             message = message,
         };
     }
-    
+
 }
 
 

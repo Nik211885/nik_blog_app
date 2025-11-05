@@ -10,11 +10,11 @@ public class NotificationTemplate : BaseEntity
     /// <summary>
     ///  Code for notification template
     /// </summary>
-    public string Code { get; set; } =  String.Empty;
+    public string Code { get; set; } = String.Empty;
     /// <summary>
     ///  Subject for notification
     /// </summary>
-    public string Subject { get; set; }  = String.Empty;
+    public string Subject { get; set; } = String.Empty;
     /// <summary>
     ///  Content is html in template
     /// </summary>
@@ -47,6 +47,6 @@ public class NotificationTemplate : BaseEntity
     /// <summary>
     ///  Navigation for ef
     /// </summary>
-    public ICollection<Arguments>? Arguments { get; set; } 
+    public ICollection<Arguments>? Arguments { get; set; }
 }
 

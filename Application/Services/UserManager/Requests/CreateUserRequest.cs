@@ -14,10 +14,13 @@ public class CreateUserRequest
     public string Email { get; init; } = string.Empty;
 
     [Password(ErrorMessage = UserManageMessageConst.PasswordIsValidFormat)]
-    public string Password { get; init; } = string.Empty;
+    public string? Password { get; init; } = string.Empty;
 
     [Compare(nameof(Password), ErrorMessage = UserManageMessageConst.PasswordNotMatchConfirm)]
-    public string PasswordConfirm { get; init; }  = string.Empty;
+    public string? PasswordConfirm { get; init; } = string.Empty;
+    public string? FirstName { get; init; }
+    public string? LastName { get; init; }
+    public string? FullName { get; init; }
 }
 
 
@@ -29,6 +32,9 @@ public static class CreateUserRequestExtension
         {
             UserName = request.UserName,
             Email = request.Email,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            FullName = request.FullName,
         };
     }
 }

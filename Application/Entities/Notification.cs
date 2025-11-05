@@ -20,11 +20,11 @@ public class Notification : BaseEntity
     /// <summary>
     ///  Navigation for user in ef
     /// </summary>
-    public User? UserReceived { get; set; }  
+    public User? UserReceived { get; set; }
     /// <summary>
     ///  Time has sent notification
     /// </summary>
-    public DateTimeOffset  SendTimeAt { get; set; }
+    public DateTimeOffset SendTimeAt { get; set; }
     /// <summary>
     /// Open pages when user click notification
     /// /// </summary>

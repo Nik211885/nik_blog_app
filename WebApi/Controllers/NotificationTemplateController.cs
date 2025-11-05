@@ -21,11 +21,20 @@ public class NotificationTemplateController
     [HttpPost("create")]
     [ValidationFilter]
     public async Task<Results<Ok<NotificationTemplateResponse>, BadRequest, ProblemHttpResult, UnauthorizedHttpResult>>
-        CreateMailInfo(CreateNotificationTemplateRequest request, CancellationToken cancellationToken = default)
+        CreateNotificationTemplate(CreateNotificationTemplateRequest request, CancellationToken cancellationToken = default)
     {
         var notificationTemplate = await _notificationTemplateServices
             .CreateNotificationTemplateAsync(request, cancellationToken);
         return TypedResults.Ok(notificationTemplate.MapToResponse());
     }
-    
+    [HttpPut("update")]
+    [ValidationFilter]
+    public async Task<Results<Ok<NotificationTemplateResponse>, BadRequest, ProblemHttpResult, UnauthorizedHttpResult>>
+        UpdateNotificationTemplate(UpdateNotificationTemplateRequest request, CancellationToken cancellationToken = default)
+    {
+        var notificationTemplate = await _notificationTemplateServices
+            .UpdateNotificationTemplateAsync(request, cancellationToken);
+        return TypedResults.Ok(notificationTemplate.MapToResponse());
+    }
+
 }

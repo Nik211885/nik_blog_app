@@ -39,10 +39,10 @@ internal static class AddDbContextServicesExtension
     /// <param name="services">services collection will build for services provider</param>
     private static void MigrationDatabase(this IServiceCollection services)
     {
-	using var scope = services.BuildServiceProvider().CreateScope();
-	ApplicationDbContext? dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-       	ArgumentNullException.ThrowIfNull(dbContext);
-       	dbContext.Database.Migrate();
+        using var scope = services.BuildServiceProvider().CreateScope();
+        ApplicationDbContext? dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        ArgumentNullException.ThrowIfNull(dbContext);
+        dbContext.Database.Migrate();
     }
     /// <summary>
     ///  Get connection string form config in presentation with configurations services

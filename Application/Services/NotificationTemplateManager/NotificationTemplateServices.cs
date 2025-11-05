@@ -19,7 +19,7 @@ public class NotificationTemplateServices
     private readonly IConnectionQueryService _connectionQueryServices;
 
     public NotificationTemplateServices(ILogger<NotificationTemplateServices> logger,
-     IEmailServices emailServices, IUnitOfWork unitOfWork,IConnectionQueryService connectionQueryServices)
+     IEmailServices emailServices, IUnitOfWork unitOfWork, IConnectionQueryService connectionQueryServices)
     {
         _logger = logger;
         _emailServices = emailServices;
@@ -192,11 +192,11 @@ public class NotificationTemplateServices
     public async Task SendMailWithTemplateServiceAsync(NotificationServicesType notificationServicesType, string to,
 #pragma warning restore CA1068 // CancellationToken parameters must come last
     string? nameTo, CancellationToken cancellationToken = default, Dictionary<string, object>? param = null,
-    Dictionary<string, object>? defaultParamsInMessage =  null)
+    Dictionary<string, object>? defaultParamsInMessage = null)
     {
         IEnumerable<NotificationTemplate> notificationTemplatesByServices = await _unitOfWork.NotificationTemplateRepository
                                                                         .GetByServiceTypeAsync(notificationServicesType, cancellationToken);
-        foreach(var n in notificationTemplatesByServices)
+        foreach (var n in notificationTemplatesByServices)
         {
             await SendMailWithTemplateAsync(n.Id, to, nameTo, cancellationToken, param, defaultParamsInMessage);
         }
@@ -210,13 +210,13 @@ public class NotificationTemplateServices
     private async Task MailInfoMustActiveToAddTemplateAsync(Guid? mailInfoID, CancellationToken cancellationToken = default)
     {
         if (mailInfoID is not null)
+        {
+            MailInfo? mailInfo = await _unitOfWork.MailInfoRepository.GetMailInfoByIdAsync((Guid)mailInfoID, cancellationToken);
+            ThrowHelper.ThrowWhenNotFoundItem(mailInfo, NotificationTemplateConstMessage.CantNotFindMailInfoToAddTemplate);
+            if (!mailInfo.IsActive)
             {
-                MailInfo? mailInfo = await _unitOfWork.MailInfoRepository.GetMailInfoByIdAsync((Guid)mailInfoID, cancellationToken);
-                ThrowHelper.ThrowWhenNotFoundItem(mailInfo, NotificationTemplateConstMessage.CantNotFindMailInfoToAddTemplate);
-                if (!mailInfo.IsActive)
-                {
-                    ThrowHelper.ThrowWhenBusinessError(NotificationTemplateConstMessage.CantNotFindMailInfoToAddTemplate);
-                }
+                ThrowHelper.ThrowWhenBusinessError(NotificationTemplateConstMessage.CantNotFindMailInfoToAddTemplate);
             }
+        }
     }
 }

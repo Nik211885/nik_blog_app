@@ -1,3 +1,5 @@
+using Application.Enums;
+
 namespace Application.Entities;
 /// <summary>
 ///  For information for login provider with sso 
@@ -7,7 +9,7 @@ public class LoginProvider : BaseEntity
     /// <summary>
     ///     Name for provider support sso
     /// </summary>
-    public string Provider { get; set; } = null!;
+    public LoginProviderEx Provider { get; set; }
 
     /// <summary>
     ///     Identifier for user in provider

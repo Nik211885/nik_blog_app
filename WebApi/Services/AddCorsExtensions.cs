@@ -23,10 +23,10 @@ internal static class AddCorsExtensions
             }
             options.AddPolicy(corsName,
                 policy => policy
-                    .WithOrigins(allowedOrigins.ToArray()) 
+                    .WithOrigins(allowedOrigins.ToArray())
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowCredentials()); 
+                    .AllowCredentials());
         });
         return services;
     }

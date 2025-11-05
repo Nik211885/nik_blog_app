@@ -16,4 +16,8 @@ public enum NotificationServicesType
     ///   Services confirm password
     /// </summary>
     ConfirmEmail,
+    /// <summary>
+    ///  Services when user create new account success by method is extend provider
+    /// </summary>
+    CreateNewAccountByExtendProvider,
 }

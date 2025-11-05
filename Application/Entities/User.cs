@@ -5,12 +5,12 @@ namespace Application.Entities;
 /// <summary>
 ///     Defined model for user
 /// </summary>
-public class    User : AuditEntity
+public class User : AuditEntity
 {
     /// <summary>
     ///  Username for user and it unique for each user 
     /// </summary>
-    public string UserName { get; set; }  = null!;
+    public string UserName { get; set; } = null!;
     /// <summary>
     ///  Email for user each user just have one account email
     /// </summary>
@@ -58,7 +58,7 @@ public class    User : AuditEntity
     /// <summary>
     ///  Birthday for user
     /// </summary>
-    public DateTimeOffset? BirthDay  { get; set; }
+    public DateTimeOffset? BirthDay { get; set; }
     /// <summary>
     ///  Lock for user
     /// </summary>
@@ -70,7 +70,7 @@ public class    User : AuditEntity
     /// <summary>
     ///  Slug for user profile
     /// </summary>
-    public string UserCvSlug { get; set; } =  string.Empty;
+    public string UserCvSlug { get; set; } = string.Empty;
     /// <summary>
     ///  subdomain defined for each user
     /// </summary>

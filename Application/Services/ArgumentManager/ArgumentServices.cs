@@ -17,7 +17,7 @@ public class ArgumentServices
     private readonly IUnitOfWork _unitOfWork;
     private readonly IConnectionQueryService _connectionQueryServices;
 
-    public ArgumentServices(ILogger<ArgumentServices> logger,IUnitOfWork unitOfWork, IConnectionQueryService connectionQueryService)
+    public ArgumentServices(ILogger<ArgumentServices> logger, IUnitOfWork unitOfWork, IConnectionQueryService connectionQueryService)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;

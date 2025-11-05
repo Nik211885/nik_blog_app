@@ -19,7 +19,7 @@ public class UnitOfWork : RepositoryWrapper, IUnitOfWork
     /// </summary>
     private IDbContextTransaction? _transaction;
 
-    public UnitOfWork(ApplicationDbContext context, IServiceProvider serviceProvider) 
+    public UnitOfWork(ApplicationDbContext context, IServiceProvider serviceProvider)
         : base(serviceProvider)
     {
         _context = context;

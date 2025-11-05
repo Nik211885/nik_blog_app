@@ -5,7 +5,6 @@ using Application.Extensions;
 using Application.Helpers;
 using Application.Repositories;
 using Application.Services.UserManager.Requests;
-using Application.Services.UserManager.Responses;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Application.Services.UserManager.Models;
@@ -17,10 +16,10 @@ public class UserManagerServices
     private readonly ILogger<UserManagerServices> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenEncryptionService _tokenEncryptionService;
-    public UserManagerServices(ILogger<UserManagerServices> logger, 
+    public UserManagerServices(ILogger<UserManagerServices> logger,
         IUnitOfWork unitOfWork, ITokenEncryptionService tokenEncryptionService)
     {
-        _tokenEncryptionService =tokenEncryptionService;
+        _tokenEncryptionService = tokenEncryptionService;
         _logger = logger;
         _unitOfWork = unitOfWork;
     }
@@ -38,7 +37,7 @@ public class UserManagerServices
         User? user = await _unitOfWork.UserRepository
             .GetByUsernameAsync(request.UserName, cancellationToken);
         ThrowHelper.ThrowBusinessErrorWhenExitsItem(user, UserManageMessageConst.UserNameIsExits);
-        
+
         List<User> users = await _unitOfWork.UserRepository
             .GetByEmailAsync(request.UserName, cancellationToken);
 
@@ -52,8 +51,10 @@ public class UserManagerServices
         user = request.MapToUser();
         user.UserCvSlug = user.UserCvSlug.GeneratorSlug();
         user.SecurityStamp = GetSecurityStampValue;
-        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-        
+        if (request.Password is not null)
+        {
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
+        }
         // Send mail to confirm email you can write here or use ideal with eda
         _unitOfWork.UserRepository.Add(user);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
@@ -117,7 +118,7 @@ public class UserManagerServices
         User? user = await _unitOfWork
             .UserRepository.GetByIdAsync(userId, cancellationToken);
         ThrowHelper.ThrowWhenNotFoundItem(user, UserManageMessageConst.UserNotFound);
-        
+
         UserManagerBusinessRule.CreateRule(user)
              .CheckLockAccount();
         // Ensure after check lock entity not null here you can move to method into member class for user
@@ -152,7 +153,7 @@ public class UserManagerServices
         List<User> users = await _unitOfWork.UserRepository.GetByEmailAsync(user.Email, cancellation, isConfirm: false);
         // It just simple loop with each entity and add state is deleted 
         // it will have problem about performance => you can use bulk delete with condition delete for that
-        foreach(var u in users.Where(x=>x.Id != user.Id))
+        foreach (var u in users.Where(x => x.Id != user.Id))
         {
             _unitOfWork.UserRepository.Delete(u);
         }
@@ -165,7 +166,7 @@ public class UserManagerServices
     /// <param name="request">includes password and password confirm</param>
     /// <param name="token">token to ensure user has required to be reset password</param>
     /// <param name="cancellation">token to cancellation action</param>
-    public async Task ResetPasswordAsync(Guid userId, string token, ResetPasswordRequest request 
+    public async Task ResetPasswordAsync(Guid userId, string token, ResetPasswordRequest request
         , CancellationToken cancellation = default)
     {
         User? user = await _unitOfWork.UserRepository.GetByIdAsync(userId, cancellation);
@@ -174,8 +175,8 @@ public class UserManagerServices
         UserManagerBusinessRule.CreateRule(user)
             .ValidUserToken(DecodeUserToken(token), UserTokenType.ResetPassword)
             .CheckLockAccount()
-            .NewPasswordCanNotLikeOldPassword(request.Password);
-        
+            .CheckPassword(request.Password);
+
         user.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
         user.SecurityStamp = GetSecurityStampValue;
         _unitOfWork.UserRepository.Update(user);
@@ -189,14 +190,14 @@ public class UserManagerServices
     /// <returns>
     ///     Return token with base 64 encrypt data about user information
     /// </returns>
-    public string GeneratorUserToken(User user, UserTokenType tokenType)
+    public string GeneratorUserToken(User user, UserTokenType tokenType, int minuteExpriedToken = 1)
     {
         var userPayload = new UserPayloadToken()
         {
             UserId = user.Id.ToString(),
             UserName = user.UserName,
             SecurityStamp = user.SecurityStamp,
-            TokenExpired = DateTimeOffset.UtcNow.AddMinutes(5),
+            TokenExpired = DateTimeOffset.UtcNow.AddMinutes(minuteExpriedToken),
             TokenType = tokenType,
         };
         string jsonUserPayload = JsonSerializer.Serialize(userPayload);

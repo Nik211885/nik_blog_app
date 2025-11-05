@@ -41,7 +41,7 @@ internal class NotificationTemplateBusinessRule
     /// </summary>
     public NotificationTemplateBusinessRule ContentCanNotEmpty()
     {
-        if (string.IsNullOrWhiteSpace(_notificationTemplate.ContentHtml) 
+        if (string.IsNullOrWhiteSpace(_notificationTemplate.ContentHtml)
             && string.IsNullOrWhiteSpace(_notificationTemplate.ContentText))
         {
             ThrowHelper.ThrowWhenBusinessError(NotificationTemplateConstMessage.ContentCanNotBeNull);

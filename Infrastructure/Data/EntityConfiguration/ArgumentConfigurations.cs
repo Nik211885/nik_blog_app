@@ -4,17 +4,17 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data.EntityConfiguration;
 
-internal class ArgumentConfigurations 
+internal class ArgumentConfigurations
     : IEntityTypeConfiguration<Arguments>
 {
     public void Configure(EntityTypeBuilder<Arguments> builder)
     {
         builder.HasKey(x => x.Id);
-        builder.Property(x=>x.Code)
+        builder.Property(x => x.Code)
             .IsRequired()
             .HasMaxLength(25)
             .IsUnicode(false);
-        builder.HasIndex(x=>x.Code)
+        builder.HasIndex(x => x.Code)
             .IsUnique();
         builder.Property(x => x.Description)
             .IsRequired()
@@ -25,9 +25,9 @@ internal class ArgumentConfigurations
             .WithMany(x => x.Arguments)
             .UsingEntity<Dictionary<Guid, Guid>>(
                 "NotificationTemplatesArguments",
-                i=> i.HasOne<NotificationTemplate>()
+                i => i.HasOne<NotificationTemplate>()
                     .WithMany().HasForeignKey("NotificationTemplateId").HasConstraintName("FK_NotificationTemplates_NotificationTemplateId"),
-                i=>i.HasOne<Arguments>()
+                i => i.HasOne<Arguments>()
                     .WithMany().HasForeignKey("ArgumentsId").HasConstraintName("FK_Arguments_Arguments"),
                 j =>
                 {

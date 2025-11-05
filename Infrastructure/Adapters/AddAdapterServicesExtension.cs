@@ -15,6 +15,7 @@ internal static class AddAdapterServicesExtension
         services.AddMemoryCache();
         services.AddSingleton<IJwtManagement, JwtManagement>();
         services.AddScoped<IEmailServices, EmailServices>();
+        services.AddSingleton<ICache, CacheMemory>();
         services.AddScoped<IUserProvider, UserProvider>();
         services.AddScoped<IConnectionQueryService, ConnectionQueryServices>();
         services.AddSingleton<ITokenEncryptionService, TokenEncryptionService>();

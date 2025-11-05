@@ -1,5 +1,7 @@
 using Application;
 using Infrastructure;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Scalar.AspNetCore;
 using WebApi.Pipelines.Middlewares;
 using WebApi.Services;
@@ -14,6 +16,24 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 builder.Services.AddHostedService<QueuedHostedService>();
+
+var authenticationExtend = builder.Configuration.GetSection("AuthenticationExtend");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+.AddCookie()
+.AddGoogle((options) =>
+{
+    options.ClientId = authenticationExtend["Google:ClientId"] ?? throw new Exception("Not config for google authentication");
+    options.ClientSecret = authenticationExtend["Google:ClientSecret"] ?? throw new Exception("Not config for google authentication");
+    options.CallbackPath = authenticationExtend["Google:CallBackPath"];
+});
+
+builder.Services.AddAuthorization();
 
 const string corsName = "AllowClientsApp";
 builder.Services.AddCorsForRegisterApp(builder.Configuration, corsName);

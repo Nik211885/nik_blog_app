@@ -34,6 +34,10 @@ public class RepositoryWrapper : IWrapperRepositories
     ///  Get instance for argument repository in di container
     /// </summary>
     public IArgumentRepository ArgumentRepository => GetRepository<IArgumentRepository>();
+    /// <summary>
+    ///  Get instance for login provider repository in di container
+    /// </summary>
+    public ILoginProviderRepository LoginProviderRepository => GetRepository<ILoginProviderRepository>();
 
     /// <summary>
     ///  Get instance for repository in services provider process case when dont have instance in container

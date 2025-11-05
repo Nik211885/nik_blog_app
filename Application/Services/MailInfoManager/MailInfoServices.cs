@@ -11,7 +11,7 @@ public class MailInfoServices
     private readonly ILogger<MailInfoServices> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
-    public MailInfoServices(ILogger<MailInfoServices> logger,  IUnitOfWork unitOfWork)
+    public MailInfoServices(ILogger<MailInfoServices> logger, IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
@@ -30,17 +30,17 @@ public class MailInfoServices
         MailInfo? mailInfo = await _unitOfWork.MailInfoRepository
             .GetMailInfoByEmailIdAsync(request.EmailId, cancellationToken);
         ThrowHelper.ThrowBusinessErrorWhenExitsItem(mailInfo, MailInfoConstMessage.EmailIdHasExits);
-        
+
         NotificationTemplate? notificationTemplate = await _unitOfWork
             .NotificationTemplateRepository.GetByIdAsync(request.TemplateId, cancellationToken);
         ThrowHelper.ThrowWhenNotFoundItem(notificationTemplate, MailInfoConstMessage.NotificationTemplateNotFound);
-        
+
         // check just notification chanel is mail just has added mail info
         MailInfoBusinessRule.CreateRule(notificationTemplate).MailChanelMustAddToTemplate();
         mailInfo = request.MapToMailInfo();
         // if template has added mail info before override for this mail info
         notificationTemplate.MailInfo = mailInfo;
-        
+
         _unitOfWork.MailInfoRepository.Add(mailInfo);
         _unitOfWork.NotificationTemplateRepository.Update(notificationTemplate);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
@@ -79,5 +79,5 @@ public class MailInfoServices
         await _unitOfWork.SaveChangeAsync(cancellationToken);
         return mailInfo;
     }
-    
+
 }

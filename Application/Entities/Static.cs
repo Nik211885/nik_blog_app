@@ -5,5 +5,5 @@ namespace Application.Entities;
 /// </summary>
 public class Static : AuditEntity
 {
-    
+
 }

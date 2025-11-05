@@ -23,7 +23,7 @@ public class ReactionEntity
     /// <summary>
     ///  Date has reaction with post
     /// </summary>
-    public DateTimeOffset ReactionAt {get;} = DateTimeOffset.UtcNow;
+    public DateTimeOffset ReactionAt { get; } = DateTimeOffset.UtcNow;
     /// <summary>
     /// Reaction type for post
     /// </summary>

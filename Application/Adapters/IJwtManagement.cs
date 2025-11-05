@@ -12,7 +12,7 @@ public interface IJwtManagement
     /// <returns>
     ///     Return jwt data model include access token and refresh token
     /// </returns>
-    JwtResult GenerateTokens(string userName, List<Claim> claims);
+    Task<JwtResult> GenerateTokensAsync(string userName, List<Claim> claims);
     /// <summary>
     ///     Provider new access token when token has expriration time
     /// </summary>
@@ -21,17 +21,17 @@ public interface IJwtManagement
     /// <returns>
     ///     Return new jwt data model include access token and refresh token
     /// </returns>
-    JwtResult RefreshToken(string refreshToken, string accessToken);
+    Task<JwtResult> RefreshTokenAsync(string refreshToken, string accessToken);
     /// <summary>
     ///     Remove refresh token in server when user logout
     /// </summary>
     /// <param name="userName">username is logout</param>
-    void RemoveRefreshTokenByUserName(string userName);
+    Task RemoveRefreshTokenByUserNameAsync(string userName);
 }
 
 
 public record JwtResult(
-    string AccessToken, 
-    string RefreshToken, 
+    string AccessToken,
+    string RefreshToken,
     int ExpirationAccessToken,
     int ExpirationRefreshToken);

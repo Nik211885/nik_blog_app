@@ -39,7 +39,7 @@ public class UserController : ControllerBase
     }
     [HttpPost("create")]
     [ValidationFilter]
-    public async Task<Results<Ok<UserResponse>, BadRequest, ProblemHttpResult>> CreateUser([FromBody] CreateUserRequest request, 
+    public async Task<Results<Ok<UserResponse>, BadRequest, ProblemHttpResult>> CreateUser([FromBody] CreateUserRequest request,
         CancellationToken cancellationToken = default)
     {
         var user = await _userManagerServices.CreateUserAsync(request, cancellationToken);
@@ -47,20 +47,21 @@ public class UserController : ControllerBase
         {
             _taskQueue.QueueBackgoundWorkItem(async token =>
             {
-                 await _notificationTemplateServices.SendMailWithTemplateServiceAsync(
-                    NotificationServicesType.CreateNewAccount,
-                    user.Email,
-                    user.FullName, token,
-                    defaultParamsInMessage: new Dictionary<string, object>
-                    {
+                await _notificationTemplateServices.SendMailWithTemplateServiceAsync(
+                   NotificationServicesType.CreateNewAccount,
+                   user.Email,
+                   user.FullName, token,
+                   defaultParamsInMessage: new Dictionary<string, object>
+                   {
                         {"link", _userManagerServices.GeneratorUserToken(user , UserTokenType.CreateAccount)}
-                    });
+                   });
             });
         }
         return TypedResults.Ok(user.MapToResponse());
     }
 
     [HttpPut("update")]
+    [ValidationFilter]
     public async Task<Results<Ok<UserResponse>, BadRequest, UnauthorizedHttpResult, ProblemHttpResult>> UpdateUser(UpdateUserRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -91,6 +92,7 @@ public class UserController : ControllerBase
         return TypedResults.NoContent();
     }
     [HttpPost("reset-password")]
+    [ValidationFilter]
     public async Task<Results<NoContent, BadRequest, ProblemHttpResult>> ResetPassword(
         Guid userId, string token, ResetPasswordRequest request, CancellationToken cancellationToken = default)
     {
@@ -116,13 +118,13 @@ public class UserController : ControllerBase
                 UserTokenType.CreateAccount => NotificationServicesType.CreateNewAccount,
                 UserTokenType.ConfirmEmail => NotificationServicesType.ConfirmEmail,
                 UserTokenType.ResetPassword => NotificationServicesType.ResetPassword,
-                _=> throw new NotImplementedException()
+                _ => throw new NotImplementedException()
             };
             await _notificationTemplateServices
             .SendMailWithTemplateServiceAsync(notificaitonType, email, user.FullName, token,
             defaultParamsInMessage: new Dictionary<string, object>
             {
-                {"link", _userManagerServices.GeneratorUserToken(user, userTokenType)}   
+                {"link", _userManagerServices.GeneratorUserToken(user, userTokenType)}
             });
         });
         return TypedResults.NoContent();

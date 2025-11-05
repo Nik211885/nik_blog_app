@@ -25,7 +25,7 @@ public class ArgumentRepository
     public async Task<Arguments?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
     {
         Arguments? argument = await _context.Arguments.
-                FirstOrDefaultAsync(x=>x.Code == code, cancellationToken);
+                FirstOrDefaultAsync(x => x.Code == code, cancellationToken);
         return argument;
     }
     /// <summary>
@@ -37,10 +37,10 @@ public class ArgumentRepository
     ///     Return argument if match the id otherwise null value
     /// </returns>
 
-    public  async Task<Arguments?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Arguments?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         Arguments? argument = await _context.Arguments.
-            FirstOrDefaultAsync(x=>x.Id == id, cancellationToken);
+            FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         return argument;
     }
     /// <summary>

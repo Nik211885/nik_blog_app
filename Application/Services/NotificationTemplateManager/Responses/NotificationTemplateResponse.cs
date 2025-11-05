@@ -5,10 +5,10 @@ using Application.Services.MailInfoManager.Responses;
 
 namespace Application.Services.NotificationTemplateManager.Responses;
 
-public  class NotificationTemplateResponse
+public class NotificationTemplateResponse
 {
     public Guid Id { get; init; }
-    public string Code { get; init; } =  string.Empty;
+    public string Code { get; init; } = string.Empty;
     public string Subject { get; init; } = string.Empty;
     public string? ContentHtml { get; init; }
     public string? ContentText { get; init; }
@@ -34,7 +34,7 @@ public static class NotificationTemplateResponseExtensions
             NotificationChanel = notificationTemplate.NotificationChanel,
             NotificationServicesType = notificationTemplate.NotificationServicesType,
             MailInfo = notificationTemplate.MailInfo?.MapToResponse(),
-            Arguments = notificationTemplate.Arguments?.Select(x=>x.MapToResponse()).ToList()
+            Arguments = notificationTemplate.Arguments?.Select(x => x.MapToResponse()).ToList()
         };
-    }   
+    }
 }

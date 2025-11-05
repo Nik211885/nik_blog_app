@@ -1,7 +1,6 @@
 ﻿using Application.Entities;
 using Application.Exceptions;
 using Application.ValueObject;
-using System.Diagnostics.CodeAnalysis;
 using Application.Services.UserManager.Models;
 
 namespace Application.Services.UserManager;
@@ -19,9 +18,7 @@ internal class UserManagerBusinessRule
     /// </summary>
     public UserManagerBusinessRule CheckLockAccount()
     {
-        LockEntity? lockAccount = _user.LockAccount;
-
-        if (lockAccount is null || lockAccount.IsLock)
+        if (CheckLockAccountBoolean())
         {
             ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.AccountHasLock);
         }
@@ -29,20 +26,41 @@ internal class UserManagerBusinessRule
         return this;
     }
     /// <summary>
+    ///  Check account has lock
+    /// </summary>
+    /// <returns>
+    ///     Return true if account has lock otherwise false
+    /// </returns>
+    public bool CheckLockAccountBoolean()
+    {
+        LockEntity? lockAccount = _user.LockAccount;
+        return lockAccount is not null && lockAccount.IsLock;
+    }
+    /// <summary>
     ///      Check if new password like with old password throw business error for that
     ///      if user login with oath2 don't have password it will don't catch this case
     /// </summary>
     /// <param name="newPassword">password user need update</param>
     /// <returns></returns>
-    public UserManagerBusinessRule NewPasswordCanNotLikeOldPassword(string newPassword)
+    public UserManagerBusinessRule CheckPassword(string newPassword)
     {
-        if (!string.IsNullOrWhiteSpace(_user.Password) && BCrypt.Net.BCrypt.Verify(newPassword, _user.Password))
+        if (CheckPasswordBoolean(newPassword))
         {
             ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.NewPasswordCanNotLikeOldPassword);
-        }   
+        }
         return this;
     }
-
+    /// <summary>
+    ///     Check password correct with user password
+    /// </summary>
+    /// <param name="newPassword">password need check with user</param>
+    /// <returns>
+    ///     Return true if password match to user otherwise false
+    /// </returns>
+    public bool CheckPasswordBoolean(string newPassword)
+    {
+        return !string.IsNullOrWhiteSpace(_user.Password) && BCrypt.Net.BCrypt.Verify(newPassword, _user.Password);
+    }
     /// <summary>
     /// Check valid token with user
     /// </summary>
@@ -55,7 +73,7 @@ internal class UserManagerBusinessRule
             || userPayloadToken.UserId != _user.Id.ToString()
             || userPayloadToken.SecurityStamp != _user.SecurityStamp
             || userPayloadToken.TokenType != userTokenType
-            || userPayloadToken.UserName  != _user.UserName
+            || userPayloadToken.UserName != _user.UserName
             )
         {
             ThrowHelper.ThrowWhenBusinessError(UserManageMessageConst.InvalidUserToken);

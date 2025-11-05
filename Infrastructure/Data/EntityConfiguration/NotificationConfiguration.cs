@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data.EntityConfiguration;
 
-public class NotificationConfiguration 
+public class NotificationConfiguration
     : IEntityTypeConfiguration<Notification>
 {
     public void Configure(EntityTypeBuilder<Notification> builder)
@@ -18,9 +18,9 @@ public class NotificationConfiguration
         builder.HasOne(x => x.UserReceived)
             .WithMany()
             .HasForeignKey(x => x.UserReceivedId);
-        builder.HasOne(x=>x.UserSendBy)
+        builder.HasOne(x => x.UserSendBy)
             .WithMany()
-            .HasForeignKey(x=>x.UserSendById);
+            .HasForeignKey(x => x.UserSendById);
         builder.Property(x => x.UrlNavigation)
             .HasMaxLength(500);
     }

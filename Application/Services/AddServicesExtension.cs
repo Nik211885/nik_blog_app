@@ -1,12 +1,13 @@
 using Application.Services.ArgumentManager;
 using Application.Services.MailInfoManager;
 using Application.Services.NotificationTemplateManager;
+using Application.Services.SignInManager;
 using Application.Services.UserManager;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Services;
 
-internal static class AddServicesExtension 
+internal static class AddServicesExtension
 {
     /// <summary>
     ///  Add all services for di container
@@ -19,6 +20,11 @@ internal static class AddServicesExtension
         services.AddScoped<NotificationTemplateServices>();
         services.AddScoped<MailInfoServices>();
         services.AddScoped<ArgumentServices>();
+        services.AddSignInManager(options =>
+        {
+            options.LoginFailToLockAccount = 5;
+            options.MinuteLockAccountWhenLoginFail = 1;
+        });
         return services;
     }
 }

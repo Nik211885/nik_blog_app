@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Repositories;
 
-internal static  class AddRepositoryExtension
+internal static class AddRepositoryExtension
 {
     /// <summary>
     ///  Add all repositories to di container
@@ -18,6 +18,7 @@ internal static  class AddRepositoryExtension
         services.AddScoped<IMalInfoRepository, MailInfoRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IArgumentRepository, ArgumentRepository>();
+        services.AddScoped<ILoginProviderRepository, LoginProviderRepository>();
         return services;
     }
 }

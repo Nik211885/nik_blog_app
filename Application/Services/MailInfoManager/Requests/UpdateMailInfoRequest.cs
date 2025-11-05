@@ -17,7 +17,7 @@ public class UpdateMailInfoRequest
     public string UserName { get; init; } = string.Empty;
     public bool IsActive { get; init; }
     public bool EnableSsl { get; init; }
-    public Guid TemplateId {get; init; }
+    public Guid TemplateId { get; init; }
 }
 
 public static class UpdateMailInfoRequestExtension

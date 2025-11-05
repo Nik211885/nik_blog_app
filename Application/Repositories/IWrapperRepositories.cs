@@ -20,4 +20,8 @@ public interface IWrapperRepositories
     ///  Repository for argument 
     /// </summary>
     IArgumentRepository ArgumentRepository { get; }
+    /// <summary>
+    ///  Repository for login provider
+    /// </summary>
+    ILoginProviderRepository LoginProviderRepository { get; }
 }

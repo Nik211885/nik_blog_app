@@ -10,7 +10,7 @@ public class Post : AuditEntity
     /// <summary>
     /// Title for post
     /// </summary>
-    public string Title { get; set; }  = String.Empty;
+    public string Title { get; set; } = String.Empty;
     /// <summary>
     /// Content for post
     /// </summary>
@@ -22,7 +22,7 @@ public class Post : AuditEntity
     /// <summary>
     ///  Slug address friendly  for post 
     /// </summary>
-    public string PostSlug { get; set; }  = String.Empty;
+    public string PostSlug { get; set; } = String.Empty;
     /// <summary>
     /// Cout comment for post
     /// </summary>

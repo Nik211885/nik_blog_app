@@ -2,11 +2,11 @@ using Application.Entities;
 
 namespace Application.Services.MailInfoManager.Responses;
 
-public class MailInfoResponse 
+public class MailInfoResponse
 {
     public Guid Id { get; init; }
     public string Host { get; init; } = string.Empty;
-    public int  Port { get; init; }
+    public int Port { get; init; }
     public string Name { get; init; } = string.Empty;
     public string EmailId { get; init; } = string.Empty;
     public string UserName { get; init; } = string.Empty;

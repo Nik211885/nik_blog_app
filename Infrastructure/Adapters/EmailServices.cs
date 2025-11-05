@@ -61,7 +61,7 @@ public class EmailServices : IEmailServices
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Error sending email");
+            _logger.LogError(ex, "Error sending email");
             throw;
         }
     }

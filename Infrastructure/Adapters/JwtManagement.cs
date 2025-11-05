@@ -12,12 +12,12 @@ namespace Infrastructure.Adapters;
 
 public class JwtManagement : IJwtManagement
 {
-    private readonly IMemoryCache _cache;
+    private readonly ICache _cache;
     private readonly byte[] _secret;
     private readonly JwtConfigurationDataModel _jwtConfigurationDataModel;
     private readonly string _prefixRefreshToken = "refresh_token{0}";
 
-    public JwtManagement(IMemoryCache cache, 
+    public JwtManagement(ICache cache,
         IConfiguration configuration)
     {
         _cache = cache;
@@ -35,7 +35,7 @@ public class JwtManagement : IJwtManagement
     /// <returns>
     ///     Return jwt result model include access token and refresh token
     /// </returns>
-    public JwtResult GenerateTokens(string userName, List<Claim> claims)
+    public async Task<JwtResult> GenerateTokensAsync(string userName, List<Claim> claims)
     {
         var jwtToken = new JwtSecurityToken(
                 issuer: _jwtConfigurationDataModel.Issuer,
@@ -46,7 +46,7 @@ public class JwtManagement : IJwtManagement
         var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
         var refreshToken = GenerateRefreshToken();
         string keyStoreRefreshToken = string.Format(_prefixRefreshToken, userName);
-        _cache.Set(keyStoreRefreshToken, refreshToken, TimeSpan.FromMinutes(_jwtConfigurationDataModel.RefreshTokenExpiration));
+        await _cache.SetItem(keyStoreRefreshToken, refreshToken, TimeSpan.FromMinutes(_jwtConfigurationDataModel.RefreshTokenExpiration));
         return new JwtResult(
                 AccessToken: accessToken,
                 RefreshToken: refreshToken,
@@ -62,7 +62,7 @@ public class JwtManagement : IJwtManagement
     /// <returns>
     ///     Return new jwt token data model
     /// </returns>
-    public JwtResult RefreshToken(string refreshToken, string accessToken)
+    public async Task<JwtResult> RefreshTokenAsync(string refreshToken, string accessToken)
     {
         var (principal, jwtToken) = DecodeAccessToken(accessToken);
         if (jwtToken is null || jwtToken.Header.Alg != SecurityAlgorithms.HmacSha256)
@@ -76,7 +76,7 @@ public class JwtManagement : IJwtManagement
             ThrowHelper.ThrowWhenUnauthorized("Invalid access token");
         }
         var keyStoreRefreshToken = string.Format(_prefixRefreshToken, userName);
-        if (!_cache.TryGetValue(keyStoreRefreshToken, out var refresh))
+        if (!await _cache.TryGetItem(keyStoreRefreshToken, out var refresh))
         {
             ThrowHelper.ThrowWhenUnauthorized("Invalid refresh token");
         }
@@ -84,13 +84,15 @@ public class JwtManagement : IJwtManagement
         {
             ThrowHelper.ThrowWhenUnauthorized("Invalid refresh token");
         }
-        return GenerateTokens(userName, principal.Claims.ToList());
+        var result = await GenerateTokensAsync(userName, [.. principal.Claims]);
+
+        return result;
     }
 
-    public void RemoveRefreshTokenByUserName(string userName)
+    public async Task RemoveRefreshTokenByUserNameAsync(string userName)
     {
         string keyStoreRefreshToken = string.Format(_prefixRefreshToken, userName);
-        _cache.Remove(keyStoreRefreshToken);
+        await _cache.RemoveItem(keyStoreRefreshToken);
     }
     /// <summary>
     ///  Validate access token skip to expiration time in toke  
@@ -99,7 +101,7 @@ public class JwtManagement : IJwtManagement
     /// <returns>
     ///     Return claims principal and jwt security in token
     /// </returns>
-    private (ClaimsPrincipal principal, JwtSecurityToken?)  DecodeAccessToken(string token)
+    private (ClaimsPrincipal principal, JwtSecurityToken?) DecodeAccessToken(string token)
     {
         if (string.IsNullOrWhiteSpace(token))
         {
@@ -144,15 +146,15 @@ internal class JwtConfigurationDataModel
     /// <summary>
     ///     Key to signature payload jwt
     /// </summary>
-    public string Secret { get; set; } =string.Empty;
+    public string Secret { get; set; } = string.Empty;
     /// <summary>
     ///      Claim inside payload is identifier token has published where
     /// </summary>
-    public string Issuer { get; set; } =string.Empty;
+    public string Issuer { get; set; } = string.Empty;
     /// <summary>
     ///     Claim inside payload is identifier token will provider what application
     /// </summary>
-    public string Audience { get; set; } =string.Empty;
+    public string Audience { get; set; } = string.Empty;
     /// <summary>
     ///     Time stamp for expiration access token
     /// </summary>

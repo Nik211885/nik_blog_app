@@ -14,14 +14,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.UserName)
             .HasMaxLength(100)
             .IsRequired(false);
-        builder.HasIndex(x=>x.UserName)
+        builder.HasIndex(x => x.UserName)
             .IsUnique();
         // Email
         builder.Property(x => x.Email)
             .HasMaxLength(150);
         builder.HasIndex(x => x.Email);
         // Password
-        builder.Property(x=>x.Password)
+        builder.Property(x => x.Password)
             .HasMaxLength(200)
             .IsUnicode(false);
         //  first name
@@ -39,15 +39,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.FullName)
             .HasMaxLength(200);
         // phone
-        builder.Property(x=>x.PhoneNumber)
+        builder.Property(x => x.PhoneNumber)
             .HasMaxLength(10)
             .IsUnicode(false);
         // avatar
-        builder.Property(x=>x.Avatar)
+        builder.Property(x => x.Avatar)
             .HasMaxLength(200)
             .IsUnicode(false);
         // role 
-        builder.Property(x=>x.Role)
+        builder.Property(x => x.Role)
             .HasConversion<string>()
             .IsRequired()
             .IsUnicode(false)
@@ -60,9 +60,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(x => x.UserCvSlug)
             .IsUnique();
         // login provider
-        builder.HasMany(x=>x.LoginProviders)
-            .WithOne(x=>x.User)
-            .HasForeignKey(x=>x.UserId)
+        builder.HasMany(x => x.LoginProviders)
+            .WithOne(x => x.User)
+            .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
         //lock account
         builder.OwnsOne(x => x.LockAccount, lockAccount =>
@@ -77,12 +77,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             userSubDomain.Property(x => x.SubDomainBlogSlug)
                 .HasMaxLength(150)
                 .IsUnicode(false);
-            userSubDomain.HasIndex(x=>x.SubDomainBlogSlug)
+            userSubDomain.HasIndex(x => x.SubDomainBlogSlug)
                 .IsUnique();
             // subject domain
             userSubDomain.OwnsOne(x => x.LockSubDomain, lockSubDomain =>
             {
-                lockSubDomain.Property(x=>x.ReasonLock)
+                lockSubDomain.Property(x => x.ReasonLock)
                     .HasMaxLength(500);
             });
         });
@@ -92,7 +92,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         // Modified
         builder.HasOne(x => x.ModifiedByUser)
             .WithMany()
-            .HasForeignKey(x=>x.ModifiedBy);
+            .HasForeignKey(x => x.ModifiedBy);
         builder.HasMany(x => x.Subjects)
             .WithOne(x => x.CreatedByUser)
             .HasForeignKey(x => x.CreatedBy)

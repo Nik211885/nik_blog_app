@@ -9,7 +9,7 @@ public class Comment : AuditEntity
     /// <summary>
     ///  Content for comment
     /// </summary>
-    public string ContentComment { get; set; } =  string.Empty;
+    public string ContentComment { get; set; } = string.Empty;
     /// <summary>
     /// Post to get comment
     /// </summary>
@@ -37,5 +37,5 @@ public class Comment : AuditEntity
     /// <summary>
     ///  Collection with comment child
     /// </summary>
-    public ICollection<Comment>? CommentChilds { get; set; }  
+    public ICollection<Comment>? CommentChilds { get; set; }
 }

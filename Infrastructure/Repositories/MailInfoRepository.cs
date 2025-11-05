@@ -10,7 +10,7 @@ public class MailInfoRepository
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public MailInfoRepository(ApplicationDbContext dbContext) 
+    public MailInfoRepository(ApplicationDbContext dbContext)
         : base(dbContext)
     {
         _dbContext = dbContext;
@@ -26,7 +26,7 @@ public class MailInfoRepository
     public async Task<MailInfo?> GetMailInfoByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         MailInfo? mailInfo = await _dbContext.MailInfos
-            .FirstOrDefaultAsync(x=>x.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         return mailInfo;
     }
     /// <summary>

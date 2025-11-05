@@ -9,13 +9,13 @@ public class ReactionEntityConfiguration
 {
     public void Configure(EntityTypeBuilder<ReactionEntity> builder)
     {
-        builder.HasKey(x=>new {x.UserId, x.EntityType, x.EntityId});
+        builder.HasKey(x => new { x.UserId, x.EntityType, x.EntityId });
         builder.Property(x => x.EntityType)
             .IsRequired()
             .HasMaxLength(10)
             .IsUnicode(false)
             .HasConversion<string>();
-        builder.Property(x=>x.ReactionType)
+        builder.Property(x => x.ReactionType)
             .IsRequired()
             .HasMaxLength(10)
             .IsUnicode(false)

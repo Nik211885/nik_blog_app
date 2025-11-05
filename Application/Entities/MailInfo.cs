@@ -43,5 +43,5 @@ public class MailInfo : BaseEntity
     /// <summary>
     ///  Navigation for template
     /// </summary>
-    public ICollection<NotificationTemplate>? NotificationTemplates { get; set; } 
+    public ICollection<NotificationTemplate>? NotificationTemplates { get; set; }
 }

@@ -15,7 +15,7 @@ public class CreateArgumentRequest
 
 public static class CreateArgumentRequestExtensions
 {
-    public static Arguments MapToArgument(this  CreateArgumentRequest request)
+    public static Arguments MapToArgument(this CreateArgumentRequest request)
     {
         return new Arguments()
         {

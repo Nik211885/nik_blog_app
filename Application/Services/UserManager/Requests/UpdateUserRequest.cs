@@ -11,12 +11,12 @@ public class UpdateUserRequest
     public DateTimeOffset? BirthDay { get; init; }
     public string? Bio { get; init; }
     public string UserCvSlug { get; init; } = string.Empty;
-    
+
 }
 
 public static class UpdateUserRequestExtension
 {
-    public static void MapToUser(this UpdateUserRequest request, User  user)
+    public static void MapToUser(this UpdateUserRequest request, User user)
     {
         user.FirstName = request.FirstName;
         user.LastName = request.LastName;

@@ -1,7 +1,6 @@
 using Application.Services.ArgumentManager;
 using Application.Services.ArgumentManager.Requests;
 using Application.Services.ArgumentManager.Responses;
-using Application.Services.NotificationTemplateManager.Requests;
 using Application.Services.NotificationTemplateManager.Responses;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +27,7 @@ public class ArgumentController : ControllerBase
         var argument = await _argumentServices.CreateArgumentAsync(request, cancellationToken);
         return TypedResults.Ok(argument.MapToResponse());
     }
-    
+
     [HttpPut("update")]
     [ValidationFilter]
     public async Task<Results<Ok<ArgumentResponse>, BadRequest, ProblemHttpResult, UnauthorizedHttpResult>>

@@ -23,5 +23,5 @@ internal static class LockEntityResponseExtension
             LockToEnd = @lock.LockToTime,
             LockToStart = @lock.LockToTime,
         };
-    } 
+    }
 }

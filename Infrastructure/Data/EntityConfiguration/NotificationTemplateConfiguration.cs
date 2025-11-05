@@ -10,7 +10,7 @@ public class NotificationTemplateConfiguration
     public void Configure(EntityTypeBuilder<NotificationTemplate> builder)
     {
         builder.HasKey(x => x.Id);
-        builder.Property(x=>x.Code)
+        builder.Property(x => x.Code)
             .IsRequired()
             .HasMaxLength(100);
         builder.Property(x => x.Subject)
@@ -21,7 +21,7 @@ public class NotificationTemplateConfiguration
             .HasConversion<string>()
             .HasMaxLength(30)
             .IsUnicode(false);
-        builder.Property(x=>x.NotificationServicesType)
+        builder.Property(x => x.NotificationServicesType)
             .IsRequired()
             .HasConversion<string>()
             .HasMaxLength(50)

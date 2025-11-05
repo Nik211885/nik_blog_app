@@ -35,7 +35,7 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
     /// <returns>
     /// Return user if match email otherwise is null
     /// </returns>
-    public async Task<List<User>> GetByEmailAsync(string email,CancellationToken cancellationToken = default, bool isConfirm = true)
+    public async Task<List<User>> GetByEmailAsync(string email, CancellationToken cancellationToken = default, bool isConfirm = true)
     {
         List<User> userByEmail = await _context.Users
             .Where(x => x.Email == email)

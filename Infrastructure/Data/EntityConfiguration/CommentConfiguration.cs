@@ -12,7 +12,7 @@ internal class CommentConfiguration : IEntityTypeConfiguration<Comment>
     {
         builder.HasKey(c => c.Id);
         // content comment
-        builder.Property(x=>x.ContentComment)
+        builder.Property(x => x.ContentComment)
             .IsRequired();
         // created
         builder.HasOne(x => x.CreatedByUser)
@@ -21,21 +21,21 @@ internal class CommentConfiguration : IEntityTypeConfiguration<Comment>
         // Modified
         builder.HasOne(x => x.ModifiedByUser)
             .WithMany()
-            .HasForeignKey(x=>x.ModifiedBy);
+            .HasForeignKey(x => x.ModifiedBy);
         // comment child
-        builder.HasMany(x=>x.CommentChilds)
-            .WithOne(x=>x.CommentParent)
-            .HasForeignKey(x=>x.CommentParentId);
+        builder.HasMany(x => x.CommentChilds)
+            .WithOne(x => x.CommentParent)
+            .HasForeignKey(x => x.CommentParentId);
         // reaction comment
-        builder.HasMany(x=>x.ReactionComments)
+        builder.HasMany(x => x.ReactionComments)
             .WithOne()
-            .HasForeignKey(x=>x.EntityId)
+            .HasForeignKey(x => x.EntityId)
             .OnDelete(DeleteBehavior.Cascade);
         // cout reaction
         builder.Property(x => x.CoutReactions)
             .IsRequired()
             .HasColumnType("jsonb")
-            .HasConversion( 
+            .HasConversion(
                 v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
                 v => JsonSerializer.Deserialize<ICollection<CoutReaction>>(v, (JsonSerializerOptions?)null) ?? new List<CoutReaction>()
             );

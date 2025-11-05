@@ -20,7 +20,7 @@ public static class ArgumentResponseExtension
             Id = arguments.Id,
             Code = arguments.Code,
             Description = arguments.Description,
-            Query = arguments.Query,    
+            Query = arguments.Query,
             CreatedAt = arguments.CreatedAt
         };
     }

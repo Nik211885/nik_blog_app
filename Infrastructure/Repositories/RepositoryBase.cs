@@ -3,7 +3,7 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories;
 
-public class RepositoryBase<TEntity> : IRepositoryBase<TEntity> 
+public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
     where TEntity : class, new()
 {
     private readonly ApplicationDbContext _context;
