@@ -1,7 +1,9 @@
 using System.Text.Json;
 using Application.Adapters;
 using Application.Entities;
+using Application.Enums;
 using Application.Exceptions;
+using Application.Extensions;
 using Application.Repositories;
 using Application.Services.Shared;
 using Application.Services.SignInManager.Models;
@@ -55,28 +57,36 @@ public class SignInManagerServices
     /// <summary>
     ///     Link provider for user 
     /// </summary>
-    /// <param name="request"></param>
+     /// <param name="userId">user id link to provider</param>
     /// <param name="token">token to validation action link with provider</param>
     /// <param name="cancellationToken">token to cancellation action</param>
     /// <returns>
     ///     Return usersign response when link account to provider success
     /// </returns>
-    public async Task<UserSignResponse> LinkWithProviderAsync(LinkWithProviderRequest request, string token, CancellationToken cancellationToken = default)
+    public async Task<UserSignResponse> LinkWithProviderAsync(Guid userId, string token, CancellationToken cancellationToken = default)
     {
-        User? user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId, cancellationToken);
+        User? user = await _unitOfWork.UserRepository.GetByIdAsync(userId, cancellationToken);
         ThrowHelper.ThrowWhenNotFoundItem(user, SignInConstMessage.UserNotFound);
         var userManagerRule = UserManagerBusinessRule.CreateRule(user);
         if (userManagerRule.CheckLockAccountBoolean())
         {
             ThrowHelper.ThrowWhenBusinessError(string.Format(SignInConstMessage.AccountHasLock, user.LockAccount?.ReasonLock, user.LockAccount?.LockToTime));
         }
-        if (ValidSignToken(user, token, SignInTokenType.LinkProvider))
+        if (ValidSignToken(user, token, SignInTokenType.LinkProvider, out var metaData))
         {
             ThrowHelper.ThrowWhenBusinessError(SignInConstMessage.HasErrorWhenLinkWithProvider);
         }
-        LoginProvider? loginWithProvider = await _unitOfWork.LoginProviderRepository.GetByProviderAsync(request.Provider, request.Identifier, cancellationToken);
+        string provider = metaData!["Provider"] ?? throw new Exception("Cant not find provider in meta data token link with provider");
+        LoginProviderEx providerEx = provider.MapStringToLoginProviderEx();
+        string identifier = metaData!["Identifier"] ?? throw new Exception("Cant not find identifier in meta data token link with provider");
+        LoginProvider? loginWithProvider = await _unitOfWork.LoginProviderRepository.GetByProviderAsync(providerEx, identifier,cancellationToken);
         ThrowHelper.ThrowBusinessErrorWhenExitsItem(loginWithProvider, SignInConstMessage.LoginProviderHasExits);
-        loginWithProvider = request.MapToProvider();
+        loginWithProvider = new LoginProvider()
+        {
+            Identifier = identifier,
+            Provider = providerEx,
+            UserId = userId
+        };
         _unitOfWork.LoginProviderRepository.Add(loginWithProvider);
         await _unitOfWork.SaveChangeAsync(cancellationToken);
         return user.MapToSignResponse();
@@ -105,7 +115,7 @@ public class SignInManagerServices
         {
             ThrowHelper.ThrowWhenBusinessError(SignInConstMessage.TokenExchangeExpired);
         }
-        if (ValidSignToken(userById, token, SignInTokenType.AuthorizationCode))
+        if (ValidSignToken(userById, token, SignInTokenType.AuthorizationCode,out var _))
         {
             ThrowHelper.ThrowWhenBusinessError(SharedConstMessage.Error);
         }
@@ -117,16 +127,18 @@ public class SignInManagerServices
     /// </summary>
     /// <param name="user">information sign encrypt</param>
     /// <param name="tokenType">token type is action with verify</param>
+    /// <param name="metaData">metaData in token</param> 
     /// <returns>
     ///     Return token with base 64 encrypt data about sign token services
     /// </returns>
-    public string GeneratorSignToken(User user, SignInTokenType tokenType, int minuteExpriedToken = 1)
+    public string GeneratorSignToken(User user, SignInTokenType tokenType, int minuteExpriedToken = 1, Dictionary<string, string>? metaData = null)
     {
         var userPayload = new SignInTokenPayload()
         {
             UserId = user.Id,
             SignInTokenType = tokenType,
-            TokenExpired = DateTimeOffset.UtcNow.AddMinutes(minuteExpriedToken)
+            TokenExpired = DateTimeOffset.UtcNow.AddMinutes(minuteExpriedToken),
+            MetaData = metaData,
         };
         string jsonUserPayload = JsonSerializer.Serialize(userPayload);
         string token = _tokenEncryptionServices.Encrypt(jsonUserPayload);
@@ -152,15 +164,18 @@ public class SignInManagerServices
     /// <param name="user">user information</param>
     /// <param name="token">token need check</param>
     /// <param name="tokenType">token type</param>
+    /// <param name="metaData">meta data in token</param>
     /// <returns>
     ///     Return true if invalid otherwise false
     /// </returns>
-    public bool ValidSignToken(User user, string token, SignInTokenType tokenType)
+    public bool ValidSignToken(User user, string token, SignInTokenType tokenType, out  Dictionary<string, string>? metaData)
     {
         var signTokenPayload = DecodeSignToken(token);
-        return signTokenPayload.TokenExpired < DateTime.UtcNow
+        var validMainProperties = signTokenPayload.TokenExpired < DateTime.UtcNow
             || signTokenPayload.UserId != user.Id
             || signTokenPayload.SignInTokenType != tokenType;
+        metaData = validMainProperties ? signTokenPayload.MetaData : null;
+        return validMainProperties;
     }
     /// <summary>
     ///     Condition when user login fail 

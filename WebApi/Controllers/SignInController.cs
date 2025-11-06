@@ -80,6 +80,7 @@ namespace WebApi.Controllers
             var fullName = userClaims?.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
             // find user by email
             string token = string.Empty;
+            string redirectUrl = string.Empty;
             var user = await _applicationDbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
             // 1. if user exits
             if (user is not null)
@@ -90,15 +91,12 @@ namespace WebApi.Controllers
                 // 1.1.1 if login provider exits
                 // -> return token to get authozization token
                 // -> return token to get authozization token 
-                if (loginProvider is not null)
-                {
-                    // -> return token to get authozization token 
-                    token = _signInManagerServices.GeneratorSignToken(user, SignInTokenType.AuthorizationCode);
-                }
                 // 1.1.2 else
-                else
+                if(loginProvider is null)
                 {
                     token = _signInManagerServices.GeneratorSignToken(user, SignInTokenType.LinkProvider);
+                    redirectUrl = $"{returnUrl}?type=link-provider&userId={user.Id}&token={Uri.EscapeDataString(token)}";
+                    return Redirect(redirectUrl);
                     // -> return token to confirm link account with new provider  
                 }
             }
@@ -123,14 +121,13 @@ namespace WebApi.Controllers
                 user = await _userManagerServices.CreateUserAsync(createUserRequest);
                 var tokenConfirmEmail = _userManagerServices.GeneratorUserToken(user, UserTokenType.ConfirmEmail);
                 await _userManagerServices.ConfirmEmailAsync(user.Id, token);
-                var linkWithProviderRequest = new LinkWithProviderRequest()
+                var metadataToLinkWithProvider = new Dictionary<string, string>()
                 {
-                    Provider = LinkWithProviderRequestExtensions.ConvertToLoginProviderEx(provider),
-                    UserId = user.Id,
-                    Identifier = identifier
+                    {"Provider", provider },
+                    {"Identifier", identifier}
                 };
-                string tokenLinkWithProvider = _signInManagerServices.GeneratorSignToken(user, SignInTokenType.LinkProvider);
-                await _signInManagerServices.LinkWithProviderAsync(linkWithProviderRequest, tokenLinkWithProvider);
+                string tokenLinkWithProvider = _signInManagerServices.GeneratorSignToken(user, SignInTokenType.LinkProvider, metaData: metadataToLinkWithProvider);
+                await _signInManagerServices.LinkWithProviderAsync(user.Id, tokenLinkWithProvider);
                 _backgroundTaskQueue.QueueBackgoundWorkItem(async token =>
                 {
                     await _notificationTemplateServices.SendMailWithTemplateServiceAsync(
@@ -140,11 +137,10 @@ namespace WebApi.Controllers
                 });
                 // create new instance for user and add login with provider 
                 // return authozization token to exchane token to login 
-                token = _signInManagerServices.GeneratorSignToken(user, SignInTokenType.AuthorizationCode);
 
             }
             token = _signInManagerServices.GeneratorSignToken(user, SignInTokenType.AuthorizationCode);
-            string redirectUrl = $"{returnUrl}?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+            redirectUrl = $"{returnUrl}?type=authozization-code&userId={user.Id}&token={Uri.EscapeDataString(token)}";
             return Redirect(returnUrl);
         }
         [HttpPost("token-exchange")]
@@ -153,6 +149,14 @@ namespace WebApi.Controllers
             UserSignResponse userSignResponse = await _signInManagerServices.ValidExchangeTokenAsync(userId, token);
             List<Claim> userClaimInPayload = MapToJwtPayloadFromUserResponse(userSignResponse);
             JwtResult jwtResult = await _jwtManagement.GenerateTokensAsync(userSignResponse.UserName, userClaimInPayload);
+            return TypedResults.Ok(jwtResult);
+        }
+        [HttpPost("link-provider")]
+        public async Task<Results<Ok<JwtResult>, BadRequest, ProblemHttpResult>> LinkAccountWithProvider(Guid userId, string token, CancellationToken cancellationToken = default)
+        {
+            var userSignResponse = await _signInManagerServices.LinkWithProviderAsync(userId, token, cancellationToken);
+            List<Claim> userClaimPayload = MapToJwtPayloadFromUserResponse(userSignResponse);
+            JwtResult jwtResult = await _jwtManagement.GenerateTokensAsync(userSignResponse.UserName, userClaimPayload);
             return TypedResults.Ok(jwtResult);
         }
         /// <summary>

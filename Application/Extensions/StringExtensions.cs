@@ -1,4 +1,5 @@
-﻿using Application.Helpers;
+﻿using Application.Enums;
+using Application.Helpers;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -60,6 +61,20 @@ internal static partial class StringExtensions
             return param.TryGetValue(key, out var val) ? val?.ToString() ?? string.Empty : match.Value;
         });
         return result;
+    }
+    /// <summary>
+    ///    Convert string provider to login provider ex
+    /// </summary>
+    /// <param name="provider"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception">Can not convert login provider ex</exception>
+    public static LoginProviderEx MapStringToLoginProviderEx(this  string provider)
+    {
+        return provider.ToLower() switch
+        {
+            "google" => LoginProviderEx.Google,
+            _  => throw new Exception($"Can't not support provider {provider}")
+        };
     }
 
     [GeneratedRegex(@"\{\{(\w+)\}\}")]
