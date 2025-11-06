@@ -94,7 +94,8 @@ namespace WebApi.Controllers
                 // 1.1.2 else
                 if(loginProvider is null)
                 {
-                    token = _signInManagerServices.GeneratorSignToken(user, SignInTokenType.LinkProvider);
+                    var metadataToLinkWithProvider = GetMetadataForLinkAccountToken(provider, identifier);
+                    token = _signInManagerServices.GeneratorSignToken(user, SignInTokenType.LinkProvider, metaData: metadataToLinkWithProvider);
                     redirectUrl = $"{returnUrl}?type=link-provider&userId={user.Id}&token={Uri.EscapeDataString(token)}";
                     return Redirect(redirectUrl);
                     // -> return token to confirm link account with new provider  
@@ -121,11 +122,7 @@ namespace WebApi.Controllers
                 user = await _userManagerServices.CreateUserAsync(createUserRequest);
                 var tokenConfirmEmail = _userManagerServices.GeneratorUserToken(user, UserTokenType.ConfirmEmail);
                 await _userManagerServices.ConfirmEmailAsync(user.Id, token);
-                var metadataToLinkWithProvider = new Dictionary<string, string>()
-                {
-                    {"Provider", provider },
-                    {"Identifier", identifier}
-                };
+                var metadataToLinkWithProvider = GetMetadataForLinkAccountToken(provider, identifier);
                 string tokenLinkWithProvider = _signInManagerServices.GeneratorSignToken(user, SignInTokenType.LinkProvider, metaData: metadataToLinkWithProvider);
                 await _signInManagerServices.LinkWithProviderAsync(user.Id, tokenLinkWithProvider);
                 _backgroundTaskQueue.QueueBackgoundWorkItem(async token =>
@@ -166,7 +163,8 @@ namespace WebApi.Controllers
         /// <returns>
         ///     Return list claim with type suit for user sign type
         /// </returns>
-        private List<Claim> MapToJwtPayloadFromUserResponse(UserSignResponse userSign){
+        private List<Claim> MapToJwtPayloadFromUserResponse(UserSignResponse userSign)
+        {
             var claims = new List<Claim>()
             {
                 new(ClaimTypes.NameIdentifier, userSign.UserId.ToString()),
@@ -181,6 +179,18 @@ namespace WebApi.Controllers
                 claims.Add(new Claim(ClaimTypes.Email, userSign.EmailAddress));
             }
             return claims;
+        }
+        /// <summary>
+        ///  Get meta data for link account token
+        /// </summary>
+        private Dictionary<string, string> GetMetadataForLinkAccountToken(string provider, string identifier)
+        {
+            var metadataToLinkWithProvider = new Dictionary<string, string>()
+                {
+                    {"Provider", provider },
+                    {"Identifier", identifier}
+                };
+            return metadataToLinkWithProvider;
         }
     }
 }
