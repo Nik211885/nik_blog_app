@@ -20,6 +20,7 @@ using Application.Services.UserManager.Requests;
 using Infrastructure.Data.Extensions;
 using Application.Services.UserManager.Models;
 using Application.Services.SignInManager.Responses;
+using WebApi.Extensions;
 
 namespace WebApi.Controllers
 {
@@ -29,6 +30,7 @@ namespace WebApi.Controllers
     {
         private readonly ILogger<SignInController> _logger;
         private readonly SignInManagerServices _signInManagerServices;
+        private readonly IUserProvider _userProvider;
         private readonly UserManagerServices _userManagerServices;
         private readonly NotificationTemplateServices _notificationTemplateServices;
         private readonly IJwtManagement _jwtManagement;
@@ -37,7 +39,7 @@ namespace WebApi.Controllers
         public SignInController(ILogger<SignInController> logger, SignInManagerServices signInManagerServices,
         IJwtManagement jwtManagement, UserManagerServices userManagerServices,
         ApplicationDbContext applicationDbContext, NotificationTemplateServices notificationTemplateServices,
-        IBackgroundTaskQueue backgroundTaskQueue)
+        IBackgroundTaskQueue backgroundTaskQueue, IUserProvider userProvider)
         {
             _logger = logger;
             _signInManagerServices = signInManagerServices;
@@ -46,6 +48,7 @@ namespace WebApi.Controllers
             _applicationDbContext = applicationDbContext;
             _notificationTemplateServices = notificationTemplateServices;
             _backgroundTaskQueue = backgroundTaskQueue;
+            _userProvider = userProvider;
         }
         [HttpPost("login-password")]
         [ValidationFilter]
@@ -56,7 +59,7 @@ namespace WebApi.Controllers
             var jwtResult = await _jwtManagement.GenerateTokensAsync(userSign.UserName, claims);
             return TypedResults.Ok(jwtResult);
         }
-        [HttpGet("login/{provider}")]
+        [HttpGet("login")]
         public IActionResult LoginWithProvider(LoginProviderEx provider, string? returnUrl = "/")
         {
             var redirectUrl = Url.Action("external-login-callback", "SignInController", new { returnUrl });
@@ -154,6 +157,29 @@ namespace WebApi.Controllers
             var userSignResponse = await _signInManagerServices.LinkWithProviderAsync(userId, token, cancellationToken);
             List<Claim> userClaimPayload = MapToJwtPayloadFromUserResponse(userSignResponse);
             JwtResult jwtResult = await _jwtManagement.GenerateTokensAsync(userSignResponse.UserName, userClaimPayload);
+            return TypedResults.Ok(jwtResult);
+        }
+        [HttpPost("logout")]
+        public async Task<Results<NoContent, BadRequest, ProblemHttpResult, UnauthorizedHttpResult>> Logout()
+        {
+            var userName = _userProvider.Username;
+            if (userName == null)
+            {
+                return TypedResults.Unauthorized();
+            }
+            await _jwtManagement.RemoveRefreshTokenByUserNameAsync(userName);
+            return TypedResults.NoContent();
+        }
+        [HttpPost("refresh-token")]
+        public async Task<Results<Ok<JwtResult>, BadRequest, ProblemHttpResult, UnauthorizedHttpResult>> RefreshToken()
+        {
+            string? accessToken = HttpContext.GetAccessToken();
+            string? refreshToken = HttpContext.GetRefreshToken();
+            if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(refreshToken))
+            {
+                return TypedResults.Unauthorized();
+            }
+            var jwtResult = await _jwtManagement.RefreshTokenAsync(refreshToken, accessToken);
             return TypedResults.Ok(jwtResult);
         }
         /// <summary>
