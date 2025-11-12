@@ -1,14 +1,18 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { JwtModel, LoginPassword } from './auth.model';
-import { BehaviorSubject, from, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import {catchError, map, tap} from "rxjs/operators"
 import { AuthDefinedApi } from './auth-defined-api';
+
+
+export const TokenSchema = "Bearer";
 
 @Injectable({
   providedIn: 'root',
 })
-export class Auth {
+
+export class AuthService {
   // inject
   private httpClient = inject(HttpClient);
 
@@ -17,6 +21,7 @@ export class Auth {
 
   // behavior
   private token$ = new BehaviorSubject<JwtModel | null>(this.getJwtToken());
+  private isAuthenticated$ = new BehaviorSubject<boolean>(false);
 
   // method public export method
   public LoginPassword(loginPassword: LoginPassword) : Observable<JwtModel>{
@@ -42,8 +47,12 @@ export class Auth {
       tap(()=>{
         this.removeToken();
         this.token$.next(null);
+        this.isAuthenticated$.next(false);
       })
     )
+  }
+  public isAuthenticated() : Observable<boolean>{
+    return this.isAuthenticated$.asObservable();
   }
   public refreshToken() : Observable<JwtModel>{
     const jwtModel = this.getJwtToken();
@@ -53,7 +62,7 @@ export class Auth {
     }
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${jwtModel.accessToken}`,
+      'Authorization': `${TokenSchema} ${jwtModel.accessToken}`,
       'RefreshToken': jwtModel.refreshToken
     });
     return this.httpClient.post<JwtModel>(
@@ -63,6 +72,7 @@ export class Auth {
         if (response.status === 200 && response.body) {
           this.saveToken(response.body);
           this.token$.next(response.body);
+          this.isAuthenticated$.next(true);
         }
       }),
       map((response) => response.body as JwtModel),
@@ -71,16 +81,29 @@ export class Auth {
           console.error('Refresh token expired or invalid');
           this.removeToken();
           this.token$.next(null);
+          this.isAuthenticated$.next(false);
         }
         return throwError(() => error);
       })
     );
   }
 
-  public getToken() : Observable<string | null>{
+  public getToken() : Observable<string | undefined | null>{
     // you can check if access token has exprise date => return null
     return this.token$.asObservable().pipe(
-      map((jwt: JwtModel | null) => jwt ? jwt.accessToken : null)
+      map((jwt)=>{
+        if(!jwt?.accessToken){
+          this.isAuthenticated$.next(false);
+          return undefined;
+        }
+        if(this.hasValidToken(jwt.accessToken)){
+          return jwt.accessToken;
+        }
+        else{
+          this.isAuthenticated$.next(false);
+          return null;
+        }
+      })
     )
   }
 
@@ -101,8 +124,22 @@ export class Auth {
     return handleGetToken.pipe(
       tap((jwtModel: JwtModel)=>{
         this.saveToken(jwtModel);
+        this.token$.next(jwtModel);
+        this.isAuthenticated$.next(true);
       })
     )
+  }
+  private hasValidToken(accessToken: string) : boolean{
+    try{
+      // payload in token is includes header payload and signature
+      const tokenPayload = JSON.parse(atob(accessToken.split('.')[1]));
+      const now = Math.floor(Date.now() / 1000);
+      const validTimeToken = tokenPayload.exp && tokenPayload.exp > now;
+      return validTimeToken;
+    }
+    catch{
+      return false;
+    }
   }
   private removeToken(){
     localStorage.removeItem(this.tokenKey);
