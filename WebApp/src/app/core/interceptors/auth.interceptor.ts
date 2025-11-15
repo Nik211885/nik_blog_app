@@ -24,7 +24,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return of(req);
       }
       if(token === null){
-        return authServices.refreshToken().pipe(
+        return authServices.RefreshToken().pipe(
           map(newToken=>{
             req = req.clone ({
               setHeaders: { Authorization: `${TokenSchema} ${newToken.accessToken}` },

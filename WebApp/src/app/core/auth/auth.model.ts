@@ -1,3 +1,4 @@
+// model
 export interface JwtModel{
     accessToken: string,
     refreshToken: string
@@ -10,3 +11,8 @@ export interface LoginPassword{
     password: string,
 }
 
+// constains
+export enum RolesDefine{
+    User = "User",
+    Admin = "Admin"
+}

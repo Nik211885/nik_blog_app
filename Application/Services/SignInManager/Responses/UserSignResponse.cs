@@ -1,4 +1,5 @@
 using Application.Entities;
+using Application.Enums;
 
 namespace Application.Services.SignInManager.Responses;
 
@@ -10,6 +11,7 @@ public class UserSignResponse
     public string? FirstName { get; init; }
     public string? LastName { get; init; }
     public string? FullName { get; init; }
+    public Role Role { get; init; }
 }
 
 public static class UserSignResponseExtension
@@ -24,6 +26,7 @@ public static class UserSignResponseExtension
             FirstName = user.FirstName,
             LastName = user.LastName,
             FullName = user.FullName,
+            Role = user.Role,
         };
     }
 }

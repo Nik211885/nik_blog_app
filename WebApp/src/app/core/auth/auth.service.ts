@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { JwtModel, LoginPassword } from './auth.model';
+import { JwtModel, LoginPassword, RolesDefine } from './auth.model';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import {catchError, map, tap} from "rxjs/operators"
+import {catchError, map, switchMap, tap} from "rxjs/operators"
 import { AuthDefinedApi } from './auth-defined-api';
 
 
@@ -15,6 +15,10 @@ export const TokenSchema = "Bearer";
 export class AuthService {
   // inject
   private httpClient = inject(HttpClient);
+
+  constructor(){
+    this.checkAuthenticated();
+  }
 
   // field and properties
   private readonly tokenKey = "token";
@@ -51,10 +55,10 @@ export class AuthService {
       })
     )
   }
-  public isAuthenticated() : Observable<boolean>{
+  public IsAuthenticated() : Observable<boolean>{
     return this.isAuthenticated$.asObservable();
   }
-  public refreshToken() : Observable<JwtModel>{
+  public RefreshToken() : Observable<JwtModel>{
     const jwtModel = this.getJwtToken();
     if(!jwtModel || !jwtModel.accessToken || !jwtModel.refreshToken){
       console.warn('Not find token in local storage');
@@ -106,6 +110,24 @@ export class AuthService {
       })
     )
   }
+  public hasRole(expectedRole: RolesDefine): Observable<boolean>{
+    const token = this.getJwtToken();
+    if(!token){
+      return of(false);
+    }
+    if (this.hasValidToken(token.accessToken)) {
+      const payload = this.decodeToken(token.accessToken);
+      return of(payload?.role === expectedRole);
+    }
+    return this.RefreshToken().pipe(
+      switchMap(newToken => {
+        const payload = this.decodeToken(newToken.accessToken);
+        return of(payload?.role === expectedRole);
+      }),
+      catchError(() => of(false)) 
+    );
+  }
+
 
   // private helper for auth services
   private saveToken(jwtToken: JwtModel){
@@ -131,15 +153,52 @@ export class AuthService {
   }
   private hasValidToken(accessToken: string) : boolean{
     try{
-      // payload in token is includes header payload and signature
-      const tokenPayload = JSON.parse(atob(accessToken.split('.')[1]));
+      const payload = this.decodeToken(accessToken);
+      if(!payload || !payload.exp){
+        return false;
+      }
       const now = Math.floor(Date.now() / 1000);
-      const validTimeToken = tokenPayload.exp && tokenPayload.exp > now;
-      return validTimeToken;
+      return payload.exp > now;
     }
     catch{
       return false;
     }
+  }
+
+  private decodeToken(accessToken: string) : any | null{
+    try{
+      // jwt inclues is header payload and signature => just get body get claim in it
+      const payloadBase64 = accessToken.split('.')[1];
+      const payloadJson = atob(payloadBase64);
+      return JSON.parse(payloadJson);
+    }
+    catch(e){
+      console.error('Invalid JWT token', e);
+      return null;
+    }
+  }
+
+  private checkAuthenticated(){
+    this.isAuthenticated().subscribe(isAuth=>{
+       this.isAuthenticated$.next(isAuth);
+    })
+  }
+
+  private isAuthenticated(): Observable<boolean> {
+    const jwtToken = this.getJwtToken();
+
+    if (!jwtToken?.accessToken) {
+      return of(false);
+    }
+
+    if (this.hasValidToken(jwtToken.accessToken)) {
+      return of(true);
+    }
+
+    return this.RefreshToken().pipe(
+      switchMap(newJwt => of(!!newJwt?.accessToken)),
+      catchError(() => of(false))
+    );
   }
   private removeToken(){
     localStorage.removeItem(this.tokenKey);

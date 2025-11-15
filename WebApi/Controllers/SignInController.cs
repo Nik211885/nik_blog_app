@@ -194,6 +194,7 @@ namespace WebApi.Controllers
             var claims = new List<Claim>()
             {
                 new(ClaimTypes.NameIdentifier, userSign.UserId.ToString()),
+                new(ClaimTypes.Role, userSign.Role.ToString()),
                 new(ClaimTypes.GivenName, userSign.UserName)
             };
             if (userSign.FullName is not null)
