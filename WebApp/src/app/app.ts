@@ -1,24 +1,19 @@
-import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { GlobalLoaderComponent } from "./core/shared/loader/global-loader/global-loader.component";
-import { GlobalLoaderService } from './core/shared/loader/global-loader/global-loader.service';
+import { Component} from '@angular/core';
+import {ButtonLoaderComponent} from '../app/core/shared/loader/button-loader/button-loader.component'
+import { ButtonPrimaryType } from './core/shared/loader/button-loader/button-loader.model';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, GlobalLoaderComponent],
+  imports: [ButtonLoaderComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  globalLoadingService = inject(GlobalLoaderService);
-
-  globalLoading(){
-    console.log("AAA");
-    this.globalLoadingService.show()
-
-    setTimeout(()=>{
-      this.globalLoadingService.hide();
-    }, 3000)
-
+  ButtonPrimaryType = ButtonPrimaryType;
+  
+  handleClick(buttonComponent: ButtonLoaderComponent) {
+    setInterval(()=>{
+      buttonComponent.stopLoading()
+    },3000)
   }
 }

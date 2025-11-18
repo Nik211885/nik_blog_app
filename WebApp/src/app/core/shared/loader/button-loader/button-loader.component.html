@@ -1,1 +1,38 @@
-<p>button-loader works!</p>
+<button
+  class="btn-loader"
+  [class]="getSizeClass()"
+  [class.btn-full-width]="fullWidth"
+  [class.btn-rounded]="rounded"
+  [class.btn-outlined]="outlined"
+  [class.btn-loading]="isLoading"
+  [disabled]="disabled || isLoading"
+  (click)="handleButtonClick()"
+  [style.background]="outlined ? 'transparent' : buttonLoader.bgColor"
+  [style.color]="outlined ? buttonLoader.bgColor.split(',')[0].replace('linear-gradient(135deg,', '').trim() : buttonLoader.textColor"
+  [style.border-radius.px]="rounded ? 50 : buttonLoader.radius"
+  [style.border]="outlined ? '2px solid' : 'none'"
+  [style.border-color]="outlined ? buttonLoader.bgColor.split(',')[0].replace('linear-gradient(135deg,', '').trim() : 'transparent'"
+>
+  <span class="btn-content" [class.btn-content-loading]="isLoading">
+    @if (isLoading)
+    {
+        <span class="spinner"></span>
+    }
+    @if(icon && iconPosition === 'left' && !isLoading)
+    {
+        <span class="btn-icon">
+        <i [class]="icon"></i>
+        </span>
+    }
+    
+    <span class="btn-text">
+      {{ isLoading && showLoadingText ? loadingText : buttonText }}
+    </span>
+    @if(icon && iconPosition === 'right' && !isLoading)
+    {
+        <span class="btn-icon">
+        <i [class]="icon"></i>
+        </span>
+    }
+  </span>
+</button>
