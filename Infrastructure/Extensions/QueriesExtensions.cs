@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using Infrastructure.DataModels;
+using Infrastructure.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Extensions;
@@ -31,5 +33,18 @@ public static class QueriesExtensions
             .Take(pageSize)
             .ToListAsync(cancellationToken);
         return new PaginationResponse<TResponse>(paginationItem, pageNumber, pageSize, totalPage);
+    }
+    /// <summary>
+    ///     Simplfy way mapping expression in queryable from TEntity to TResponse 
+    /// </summary>
+    /// <param name="queryable"></param>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
+    /// <returns></returns>
+    public static IQueryable<TResponse> MapTo<TEntity, TResponse>(this IQueryable<TEntity> queryable)
+        where TResponse: new()
+    {
+        Expression<Func<TEntity, TResponse>> mappingExpression = ExpressionHelpers.MapTo<TEntity, TResponse>();
+        return queryable.Select(mappingExpression);
     }
 }
